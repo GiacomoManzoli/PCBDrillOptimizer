@@ -37,6 +37,8 @@ cstdlib
 -
 vector
 -
+iostream
+-
 Problem.h
 /Users/gmanzoli/Documents/Università/MEMOC/Laboratori/PCBDrillOptimizer/common/Problem.h
 
@@ -94,8 +96,6 @@ iostream
 Population.h
 /Users/gmanzoli/Documents/Università/MEMOC/Laboratori/PCBDrillOptimizer/ga/Population.h
 assert.h
--
-iostream
 -
 
 /Users/gmanzoli/Documents/Università/MEMOC/Laboratori/PCBDrillOptimizer/ga/Population.h

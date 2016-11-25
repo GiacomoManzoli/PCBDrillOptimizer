@@ -1,8 +1,9 @@
 #ifndef SOLUTION_H
 #define SOLUTION_H
 
-#import <cstdlib>
-#import <vector>
+#include <cstdlib>
+#include <vector>
+#include <iostream>
 #include "Problem.h"
 
 using namespace std;
@@ -16,10 +17,11 @@ private:
 public:
     Solution(Problem* problem);
     Solution(Problem* problem, vector<Node> path);
-    double getFitness();
-    vector<Node> getPath();
-    void printPath();
-    Node nextNode(Node from);
+    double getFitness() const;
+    vector<Node> getPath() const;
+    void printPath() const;
+    Node nextNode(Node from) const;
+    bool equals(const Solution& sol) const;
 };
 
 #endif

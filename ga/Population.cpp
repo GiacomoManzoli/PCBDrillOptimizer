@@ -4,23 +4,161 @@
 
 #include "Population.h"
 #include <assert.h>
-#include <iostream>
 
 
 Population::Population(unsigned int size, Problem *problem) {
     this->size = size;
     this->problem = problem;
 
+    this->averageFitness = 0;
+    double best = INT_MAX;
+    double worst = 0;
+    int bi, wi;
+
     for (int i = 0; i < size; ++i) {
         solutions.push_back(new Solution(problem));
+        double solFitness = solutions.at(i)->getFitness();
+        if (solFitness < best){
+            bi = i;
+            best = solFitness;
+        }
+        if (solFitness > worst){
+            wi = i;
+            worst = solFitness;
+        }
+        this->averageFitness += solFitness;
     }
+    this->averageFitness/= size;
+    this->best = solutions.at(bi);
+    this->worst = solutions.at(wi);
+}
 
+/**
+ * Evolve la popolazione.
+ * Vengono creati (size*NEW_GENERATION_RATIO) nuovi individui.
+ * Viene riportata la popolazione alla dimensione stabilita scegliendo con montecarlo.
+ * Tutte le soluzioni della popolazione possono mutare.
+ * */
+void Population::evolvePopulation(){
+    // crea un 50% di nuovi individui
+    for (int i = 0; i < size*NEW_GENERATION_RATIO; ++i) {
+        vector<Solution*> parents = extract(2);
+        solutions.push_back(crossover(parents.at(0), parents.at(1)));
+    }
+    // sfoltisce la popolazione scegliendono N con montecarlo, nella scelta faccio anche l'eventuale mutazione
+    vector <Solution* > newPopulation;
+    // nel mentre calcolo anche le statistiche della popolazione
+    this->averageFitness = 0;
+    double best = INT_MAX;
+    double worst = 0;
+    int bi, wi;
+    for (int i = 0; i < size; ++i) {
+        Solution* selected = montecarloSelection(solutions);
+        // mutate fa il delete della soluzione, quindi prima di chiamarla devo toglierla da solutions
+        solutions.erase(std::remove(solutions.begin(), solutions.end(), selected), solutions.end());
+        Solution* newSolution = mutate( selected );
+        newPopulation.push_back( newSolution );
 
+        double solFitness = newSolution->getFitness();
+        if (solFitness < best){
+            bi = i;
+            best = solFitness;
+        }
+        if (solFitness > worst){
+            wi = i;
+            worst = solFitness;
+        }
+        this->averageFitness += solFitness;
+    }
+    solutions = newPopulation;
+    this->averageFitness/= size;
+    this->best = solutions.at(bi);
+    this->worst = solutions.at(wi);
 }
 
 
-bool nodeInPath(Node node, vector< Node > path){
-    return std::find(path.begin(), path.end(), node) != path.end();
+Solution *Population::getBestSolution() {
+    return best;
+}
+
+Solution *Population::getWorstSolution() {
+    return worst;
+}
+
+double Population::getAverageFitness() {
+    return averageFitness;
+}
+
+/* ********************************************************************************************************
+ * METODI PER LA GESTIONE DELLA POPOLAZIONE
+ * ********************************************************************************************************
+ */
+
+/**
+ * Effettua la scelta pesata di una soluzione, tenendo conto del suo livello di Fitness.
+ * */
+Solution* Population::montecarloSelection(vector<Solution*> solutions) {
+    double tot = 0;
+    for (unsigned int i = 0; i < solutions.size(); ++i) {
+        tot += solutions.at(i)->getFitness();
+    }
+
+    double val = (rand() / (double) RAND_MAX) * tot; // genero un numero tra 0 e tot
+    assert(val >= 0);
+    assert(val <= tot);
+    // sommo tutti i valori di fitness, finché non diventano maggiori del valore ottenuto
+    // quando diventano maggiori vuol dire che l'indice che ha reso maggiore in numero è quello scelto casualente
+    int i = 0;
+    double sum = 0;
+    while (val > sum){
+        sum += solutions.at(i)->getFitness();
+        if (val > sum) {i++;} // evito di incrementare all'ultima iterazione
+    }
+    assert(i < solutions.size());
+    return solutions.at(i);
+}
+
+/**
+ * Applica una mutazione alla soluzione con una probabilità bassa.
+ * La mutazione avviene effettuando uno shuffle del percorso associato alla soluzione di partenza.
+ * */
+Solution* Population::mutate(Solution* solution){
+    double p = rand() / double(RAND_MAX);
+    if (p >= MUTATION_PROBABILITY){ return solution;}
+
+    // C'è da effettuare una mutazione
+    vector<Node> currentPath(solution->getPath());
+
+    random_shuffle(currentPath.begin()+1, currentPath.end()-1);
+    assert(currentPath.at(0) == 0);
+    assert(currentPath.at(currentPath.size()-1) == 0);
+
+    delete solution;
+    return new Solution(problem, currentPath);
+}
+
+/**
+ * Estrae n soluzioni dalla popolazione.
+ * La scelta viene fatta con K-tournament, utilizzando un K proporzionale alla dimensione della popolazione
+ * K = N/10
+ * */
+vector<Solution*> Population::extract(int n) {
+
+    vector<Solution*> winners; // array con i risultati da ritornare
+
+    int K = size / 10;
+
+    for (int i = 0; i < n; ++i) {
+        vector<Solution*> participants(K);
+        vector<Solution*> avoid(winners); //soluzioni già prese in considerazione (vincitrici+già in torneo
+        for (int j = 0; j < K; ++j) {
+            participants[j] = chooseRandom(this->solutions, avoid);
+            avoid.push_back(participants[j]);
+        }
+        winners.push_back(chooseBest(participants));
+    }
+
+    return winners;
 }
 
 /**
@@ -37,14 +175,13 @@ Solution *Population::crossover(Solution *s1, Solution *s2) {
     unsigned int N = problem->getSize();
     vector<Node> newPath(N+1);
     newPath[0] = newPath[N] = 0;
-    vector<Node> path1 = s1->getPath();
-    vector<Node> path2 = s2->getPath();
+    vector<Node> path1(s1->getPath());
+    vector<Node> path2(s2->getPath());
 
     for (int i = 1; i < N; ++i) {
         Node currentNode = newPath[i-1];
         Node s1Next = s1->nextNode(currentNode);
         Node s2Next = s2->nextNode(currentNode);
-        cout << currentNode << " " << s1Next << " " << s2Next << endl;
         /* Casi possibili
          * s1Next = 0 e s2Next != 0 e notInPath => scelgo s2Next
          * s1Next = 0 e s2Next = 0 oppure s2Next inPath => correggo scegliendo tra quelli rimasti il migliore
@@ -73,21 +210,10 @@ Solution *Population::crossover(Solution *s1, Solution *s2) {
 }
 
 
-
-/**
- * Estrae n soluzioni dalla popolazione, scelte a caso in base al loro livello di fitness
- * */
-Solution **Population::extract(int n) {
-    Solution** solutions = new Solution*[n];
-
-    // TODO implementare
-    for (int i = 0; i < n; ++i) {
-        solutions[i] = this->solutions[i];
-    }
-    return solutions;
-}
-
-// ############# METODI PRIVATI
+/* ********************************************************************************************************
+ * METODI PER LA GESTIONE DEI NODI
+ * ********************************************************************************************************
+ */
 
 /**
  * Effettua la scelta pesata di un valore in base alla sua probabilità
@@ -136,3 +262,44 @@ bool Population::isGoodChoice(Node n, vector<Node> path){
 bool Population::isBadChoice(Node n, vector<Node> path){
     return n == 0 || nodeInPath(n, path);
 }
+bool Population::nodeInPath(Node node, vector< Node > path){
+    return std::find(path.begin(), path.end(), node) != path.end();
+}
+
+/* ********************************************************************************************************
+ * METODI PER LA GESTIONE DELLE SOLUZIONI
+ * ********************************************************************************************************
+ */
+
+Solution* Population::chooseRandom(vector<Solution*> pool, vector<Solution*>  avoid){
+    while(true) {
+        unsigned int val = rand() % (unsigned int)pool.size();
+        Solution* candidate = pool.at(val);
+
+        bool goodCandidate = true;
+        for (int i = 0; i < avoid.size(); ++i) {
+            //if (avoid.at(i)->equals(*candidate)) { // se uso equals ci sono troppe soluzioni con lo stesso path quando mi avvicino alla convergenza e quindi diventa troppo pesante
+            if (avoid.at(i) == candidate) {
+                goodCandidate = false;
+                break;
+            }
+        }
+        if (goodCandidate){
+            return candidate;
+        }
+    }
+}
+
+Solution* Population::chooseBest(vector<Solution*> pool){
+    double bestValue = INT_MAX;
+    unsigned long index = pool.size()+1;
+    for (unsigned long i = 0; i < pool.size(); ++i) {
+        if (pool.at(i)->getFitness() < bestValue){
+            bestValue = pool.at(i)->getFitness();
+            index = i;
+        }
+    }
+    return pool.at(index);
+}
+
+

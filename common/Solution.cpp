@@ -27,7 +27,6 @@ Solution::Solution(Problem *problem) {
 
     for (int i = 1; i < N; ++i) {
         Node selectedNode = chooseNode(path[i-1], nodes, C);
-        cout << "Costo tra " << path[i-1] << " e " << selectedNode << endl;
         fitness += C[path[i-1]][selectedNode]; // man mano che proseguo calcolo il costo della soluzione
         path[i] = selectedNode;
 
@@ -51,7 +50,10 @@ Solution::Solution(Problem *problem, vector<Node> p) {
     this->problem = problem;
     unsigned int N = problem->getSize();
     vector< vector<double> > C = problem->getCosts();
-    this->path.assign(p.begin(), p.end());
+    this->path.resize(p.size());
+    for (int j = 0; j < path.size(); ++j) {
+        path[j] = p[j];
+    }
     fitness = 0;
     int debug_sum = 0;
     int debug_sum_2 =0;
@@ -63,13 +65,13 @@ Solution::Solution(Problem *problem, vector<Node> p) {
     assert(debug_sum == debug_sum_2);
 }
 
-double Solution::getFitness() {
+double Solution::getFitness() const{
     return fitness;
 }
 /**
  * Stampa a video il percorso
  * */
-void Solution::printPath() {
+void Solution::printPath() const {
 
     cout << "Fitness: " << fitness <<endl;
     for (int i = 0; i < path.size(); ++i) {
@@ -79,11 +81,11 @@ void Solution::printPath() {
     cout << endl;
 }
 
-vector<Node> Solution::getPath() {
+vector<Node> Solution::getPath() const {
     return path;
 }
 
-Node Solution::nextNode(Node from) {
+Node Solution::nextNode(Node from) const {
     for (int i = 0; i < path.size()-1; ++i) {
         if (path[i] == from){
             return path[i+1];
@@ -94,7 +96,12 @@ Node Solution::nextNode(Node from) {
 }
 
 
-// ########### Metodi privait
+bool Solution::equals(const Solution &sol) const{
+    return this->path == sol.path;
+}
+
+
+// ########### Metodi privati
 /**
  * Effettua la scelta pesata di un nodo da utilizzare come destinazione a partire dal nodo from
  * */
@@ -116,7 +123,6 @@ Node Solution::chooseNode(Node from, vector<Node> nodes, vector< vector<double> 
     double val = rand() / double(RAND_MAX); // genero un numero tra 0 e 1
     assert(val >= 0);
     assert(val <= 1);
-    cout << "VAL " <<val <<endl;
     // sommo tutte le probabilità, finché non diventano maggiori del valore ottenuto
     // quando diventano maggiori vuol dire che l'indice che ha reso maggiore in numero è quello scelto casualente
     int i = 0;
@@ -128,3 +134,4 @@ Node Solution::chooseNode(Node from, vector<Node> nodes, vector< vector<double> 
     assert(i < nodes.size());
     return nodes[i];
 }
+

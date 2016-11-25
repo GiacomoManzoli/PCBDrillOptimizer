@@ -62,6 +62,7 @@ vector< vector<double> > Problem::getCosts() {
  * */
 unsigned int Problem::getSize() {
     return N;
+    return N;
 }
 
 /**

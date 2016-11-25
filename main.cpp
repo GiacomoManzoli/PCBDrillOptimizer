@@ -19,11 +19,12 @@ int main() {
     // GA
     GASolver* gaSolver = new GASolver(problem);
     Solution* sol2 = gaSolver->solve();
-    sol2->printPath();
+    //sol2->printPath();
 
     // CPLEX
     CPLEXSolver* solver = new CPLEXSolver(problem);
     Solution* sol1 = solver->solve();
+    cout << "CPLEX: "<<endl;
     sol1->printPath();
 
     return 0;

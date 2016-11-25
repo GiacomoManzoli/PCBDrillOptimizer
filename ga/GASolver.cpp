@@ -16,10 +16,38 @@ GASolver::GASolver(Problem *problem) {
 
 Solution *GASolver::solve() {
     // Crea la popolazione (insieme di soluzioni, dimensione della popolazione)
-    Population* population = new Population(2, problem);
+    Population* population = new Population(100, problem);
 
-    Solution** parents = population->extract(2);
-    Solution* s3 = population->crossover(parents[0], parents[1]);
+    cout << "Popolazione iniziale:" <<endl;
+    cout << "Worst: " <<population->getWorstSolution()->getFitness();
+    cout << "\t Avg: " <<population->getAverageFitness();
+    cout << "\t Best: " <<population->getBestSolution()->getFitness() << endl;
+
+    cout << "Evoluzione in corso" <<endl;
+    int i = 0;
+    int consecutiveNotImproving = 0;
+
+    //while (true){
+    //    // Consecutive not improving non funziona bene (consectuive worstening invece non termina quasi mai)
+    //    if (consecutiveNotImproving == 3){ break; }
+    //    i++;
+    //    double oldBest = population->getBestSolution()->getFitness();
+    //    population->evolvePopulation();
+    //    double newBest = population->getBestSolution()->getFitness();
+//
+    //    if (newBest > oldBest) { consecutiveNotImproving++;}
+    //    else {consecutiveNotImproving = 0;}
+    //}
+    for (int j = 0; j < 1000; ++j) {
+        population->evolvePopulation();
+    }
+
+    cout << endl;
+    cout << "Popolazione finale dopo "<<i << " iterazioni" <<endl;
+    cout << "Worst: " <<population->getWorstSolution()->getFitness();
+    cout << "\t Avg: " <<population->getAverageFitness();
+    cout << "\t Best: " <<population->getBestSolution()->getFitness() << endl;
+    Solution* s3;
     //cout << "Parent 1" << endl;
     //parents[0]->printPath();
     //cout << "Parent 2" << endl;
