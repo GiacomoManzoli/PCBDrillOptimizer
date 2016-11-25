@@ -1,4 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/gmanzoli/Documents/Università/MEMOC/Laboratori/Esercitazioni/PCBDrillOptimizer
+/Applications/CLion.app/Contents/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/gmanzoli/Documents/Università/MEMOC/Laboratori/PCBDrillOptimizer
 -- The C compiler identification is AppleClang 8.0.0.8000038
 -- The CXX compiler identification is AppleClang 8.0.0.8000038
 -- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc
@@ -16,4 +16,4 @@
 -- Found CPLEX: /opt/CPLEX_Studio1263/cplex/lib/x86-64_osx/static_pic/libcplex.a  
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/gmanzoli/Documents/Università/MEMOC/Laboratori/Esercitazioni/PCBDrillOptimizer/cmake-build-debug
+-- Build files have been written to: /Users/gmanzoli/Documents/Università/MEMOC/Laboratori/PCBDrillOptimizer/cmake-build-debug

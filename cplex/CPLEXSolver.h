@@ -20,10 +20,13 @@ private:
     char name[NAME_SIZE];
     std::vector< std::vector<int> > xMap;
     std::vector< std::vector<int> > yMap;
+    vector<Node> extractPath(vector<double> vals, int start=0, int cnt=0);
     Problem* problem;
 public:
     CPLEXSolver(Problem* problem);
     Solution* solve();
+
+
 };
 
 

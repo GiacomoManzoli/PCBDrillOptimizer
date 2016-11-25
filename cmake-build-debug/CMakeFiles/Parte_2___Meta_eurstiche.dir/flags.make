@@ -6,5 +6,5 @@ CXX_FLAGS = -g   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/gmanzoli/Documents/Università/MEMOC/Laboratori/Esercitazioni/PCBDrillOptimizer/include -I/opt/CPLEX_Studio1263/cplex/include 
+CXX_INCLUDES = -I/Users/gmanzoli/Documents/Università/MEMOC/Laboratori/PCBDrillOptimizer/include -I/opt/CPLEX_Studio1263/cplex/include 
 

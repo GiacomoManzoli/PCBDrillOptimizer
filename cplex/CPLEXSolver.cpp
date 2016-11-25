@@ -11,7 +11,7 @@
 #include <vector>
 #include <time.h>
 #include <math.h>
-
+#include <assert.h>
 
 using namespace std;
 
@@ -33,7 +33,7 @@ NB: Dopo aver visitato tutti i nodi la trivella deve ritornare alla posizione di
 */
 
 CPLEXSolver::CPLEXSolver(Problem *problem) {
-
+    this->problem = problem;
     // Creazione dell'ambiente CPLEX
     this->env = CPXopenCPLEX(&status);
     if (status){
@@ -220,11 +220,11 @@ CPLEXSolver::CPLEXSolver(Problem *problem) {
             idx[1] = yMap[i][j];
             std::vector<double> coef(2);
             coef[0] = 1;
-            coef[1] = -N;
+            coef[1] = (double)N * -1;
             char sense = 'L';
             double rhs = 0;
             snprintf(name, NAME_SIZE, "att_%d_%d",i,j);
-            char* cname = (char*)(&name[0]);
+            char* cname = &name[0];
 
             int matbeg = 0;
             // PXaddrows, env, lp, colcount, rowcount, nzcnt, &rhs[0], &sense[0], &rmatbeg[0], &rmatind[0], &rmatval[0], newcolnames , rownames
@@ -253,8 +253,30 @@ Solution *CPLEXSolver::solve() { // TODO completare
     int fromIdx = 0;
     int toIdx = numVars - 1;
     CHECKED_CPX_CALL( CPXgetx, env, lp, &varVals[0], fromIdx, toIdx );
-    cout << "Percorso:"<<endl;
+
+    vector<Node> path = extractPath(varVals);
+    assert(path.size() == problem->getSize()+1);
+
 
     CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
-    return nullptr;
+    return new Solution(problem, path);
+}
+
+
+vector<Node> CPLEXSolver::extractPath(vector<double> vals, int start, int cnt){
+    unsigned int l = problem->getSize() + 1; // il nodo di partenza deve comparire 2 volte
+
+    if (cnt == l) { return vector<Node>(); }
+
+    for (int i = 0; i < l; ++i) {
+
+        if ( i != start && round(vals[yMap[start][i] ]) == 1) {
+            // i è il nodo in cui mi sposto
+            vector<Node> res;
+            res.push_back(start);
+            vector<Node> nextPath = extractPath(vals, i, ++cnt);
+            res.insert(res.end(), nextPath.begin(), nextPath.end()); // faccio l'append del resto del percorso.
+            return  res;
+        }
+    }
 }

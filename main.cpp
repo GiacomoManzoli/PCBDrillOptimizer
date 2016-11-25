@@ -2,6 +2,8 @@
 
 #include "common/Problem.h"
 #include "ga/GASolver.h"
+#include "cplex/CPLEXSolver.h"
+
 
 using namespace std;
 
@@ -13,9 +15,16 @@ int main() {
     Problem* problem = new Problem(10);
     problem->printCosts();
 
-    GASolver* solver = new GASolver(problem);
-    solver->solve();
 
+    // GA
+    GASolver* gaSolver = new GASolver(problem);
+    Solution* sol2 = gaSolver->solve();
+    sol2->printPath();
+
+    // CPLEX
+    CPLEXSolver* solver = new CPLEXSolver(problem);
+    Solution* sol1 = solver->solve();
+    sol1->printPath();
 
     return 0;
 }
