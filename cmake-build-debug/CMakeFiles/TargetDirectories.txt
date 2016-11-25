@@ -1,0 +1,3 @@
+/Users/gmanzoli/Documents/Università/MEMOC/Laboratori/Esercitazioni/PCBDrillOptimizer/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/gmanzoli/Documents/Università/MEMOC/Laboratori/Esercitazioni/PCBDrillOptimizer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/gmanzoli/Documents/Università/MEMOC/Laboratori/Esercitazioni/PCBDrillOptimizer/cmake-build-debug/CMakeFiles/Parte_2___Meta_eurstiche.dir
