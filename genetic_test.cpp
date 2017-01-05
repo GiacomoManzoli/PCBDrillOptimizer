@@ -44,22 +44,23 @@ int main() {
                         cout << newGenerationRatios[c]<<";"<<endl;
                         string path = istancesPaths[ist];
                         Problem* p = new Problem(path);
-                        GASolver solver = GASolver(
+                        GASolver* solver = new GASolver(
                                 p,
                                 populationSizes[a],
-                                2, // Timelimit di 1 minuto
+                                1, // Timelimit di 1 minuto
                                 mutationRates[b],
                                 newGenerationRatios[c]);
-                        Solution* solution = solver.solve();
-                        Population* population = solver.getLastPopulation();
+                        Solution* solution = solver->solve();
+                        Population* population = solver->getLastPopulation();
                         myfile << populationSizes[a]<<";";
                         myfile << mutationRates[b]<<";";
                         myfile << newGenerationRatios[c]<<";";
                         myfile << istancesPaths[ist]<<";";
-                        myfile << solver.getLastIterationsCount()<<";";
+                        myfile << solver->getLastIterationsCount()<<";";
                         myfile << population->getWorstSolution()->getFitness()<<";";
                         myfile << population->getAverageFitness()<<";";
                         myfile << population->getBestSolution()->getFitness()<<endl;
+                        delete solver;
                         delete p;
                     }
                 }
