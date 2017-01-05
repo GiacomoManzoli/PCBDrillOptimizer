@@ -3,24 +3,13 @@
 
 #include "common/Problem.h"
 #include "ga/GASolver.h"
-#include "cplex/CPLEXSolver.h"
 
 
 using namespace std;
 
 int main() {
     srand(time(NULL));
-    std::cout << "Hello, World! from main.cpp" << std::endl;
-
-    // Carica i dati
-    //Problem* problem = new Problem("istances/genetic/rand_n50_1_distances.txt");
-    //problem->printCosts();
-
-    // GA
-    //GASolver* gaSolver = new GASolver(problem, 100, 20, 0.01, 1.5);
-    //Solution* sol2 = gaSolver->solve();
-    //sol2->printPath();
-    //cout << " ------------ " <<endl;
+    std::cout << "Hello, World! from genetic_test.cpp" << std::endl;
 
     unsigned int populationSizes[3] = {100, 250, 500};
     double mutationRates[3] = {0.01, 0.05, 0.1};
@@ -79,18 +68,6 @@ int main() {
     }
     myfile.close();
 
-
-
-    // per ogni istanza
-    // provo 5 volte
-    // salvo una riga sul file con: valori dei parametri, codice dell'istanza, tempo necessario, valore soluzione
-
-
-    // CPLEX
-    //CPLEXSolver* solver = new CPLEXSolver(problem);
-    //Solution* sol1 = solver->solve();
-    //cout << "CPLEX: "<<endl;
-    //sol1->printPath();
 
 
 
