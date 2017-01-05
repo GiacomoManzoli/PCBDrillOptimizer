@@ -7,13 +7,23 @@
 
 
 #include "../common/Solution.h"
+#include "Population.h"
 
 class GASolver {
 private:
     Problem* problem;
+    unsigned int populationSize;
+    unsigned int timeLimit;
+    double mutationProbability;
+    double newGenerationRatio;
+    Population* population;
+    unsigned int lastIterationsCount;
 public:
-    GASolver(Problem* problem);
+    GASolver(Problem* problem, unsigned int populationSize, unsigned int timeLimit, double mutationProbability, double newGenerationRatio);
+    ~GASolver(){ delete population;}
     Solution* solve();
+    Population* getLastPopulation();
+    unsigned int getLastIterationsCount();
 };
 
 

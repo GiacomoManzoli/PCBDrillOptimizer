@@ -44,6 +44,20 @@ def printDistancesFile(fileName, distances):
         outFile.write("\n")
     outFile.close()
 
+def printIstanceToFile(istanceName, W, H, points, distances):
+    outFile = open(istanceName+".ist", "w")
+    outFile.write(str(len(distances))+"\n") # N
+    outFile.write(str(W)+"\n") # W
+    outFile.write(str(H)+"\n") # H
+    for i in range(len(points)): # Punti
+        x,y = points[i]
+        outFile.write(str(x) + " " + str(y)+ "\n")
+    for i in range(len(distances)):
+        for j in range(len(distances)):
+            outFile.write(str(distances[i][j])+ " ")
+        outFile.write("\n")
+    outFile.close()
+
 def generateRandomInstance(N):
     H = random.randint(floor(2*sqrt(N)), 2*N) 
     W = random.randint(floor(2*sqrt(N)), 2*N)
@@ -149,7 +163,7 @@ def main(argv):
     try:
         (opts, args) = getopt.getopt(argv,"hn:i:f:p")
     except getopt.GetoptError, e:
-        print "generator.py -n <n> --f <instanceName> [-p]"
+        print "generator.py -n <n> -f <instanceName> [-p]"
         print "generator.py -i <imageFilePath> -f <instanceName>"
         print e
         sys.exit(2)
@@ -161,7 +175,7 @@ def main(argv):
     for opt, arg in opts:
         if opt == "-h":
             print "USAGE:"
-            print "generator.py -n <n> --f <instanceName> [-p]"
+            print "generator.py -n <n> -f <instanceName> [-p]"
             print "generator.py -i <imageFilePath> -f <instanceName>"
             sys.exit()
         elif opt in ("-n", "--num"):
@@ -185,6 +199,7 @@ def main(argv):
 
     printPointsFile(fileName, W, H, points)
     printDistancesFile(fileName, distances)
+    #printIstanceToFile(fileName, W, H, points, distances)
 
 if __name__ == '__main__':
     main(sys.argv[1:])   

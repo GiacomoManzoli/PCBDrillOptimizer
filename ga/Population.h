@@ -11,9 +11,9 @@
 
 class Population {
 private:
-    // Parametri dell'algoritmo nascosti
-    const double MUTATION_PROBABILITY = 0.01;
-    const double NEW_GENERATION_RATIO = 0.5;
+    // Parametri dell'algoritmo
+    double MUTATION_PROBABILITY;
+    double NEW_GENERATION_RATIO;
 
     // Parametri settabili da API
     unsigned int size;
@@ -44,7 +44,8 @@ private:
     Solution *chooseBest(vector<Solution*>  pool);
 
 public:
-    Population(unsigned int size, Problem* problem);
+    Population(unsigned int size, double mutationProbability, double newGenerationRatio,  Problem* problem);
+    ~Population() {delete best; delete worst; }
     void evolvePopulation();
     Solution* getBestSolution();
     Solution* getWorstSolution();

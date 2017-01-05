@@ -6,10 +6,11 @@
 #include <assert.h>
 
 
-Population::Population(unsigned int size, Problem *problem) {
+Population::Population(unsigned int size, double mutationProbability, double newGenerationRatio, Problem *problem) {
     this->size = size;
     this->problem = problem;
-
+    this->NEW_GENERATION_RATIO = newGenerationRatio;
+    this->MUTATION_PROBABILITY = mutationProbability;
     this->averageFitness = 0;
     double best = INT_MAX;
     double worst = 0;
@@ -40,10 +41,10 @@ Population::Population(unsigned int size, Problem *problem) {
  * Tutte le soluzioni della popolazione possono mutare.
  * */
 void Population::evolvePopulation(){
-    // crea un 50% di nuovi individui
+    // crea i nuovi individui
     for (int i = 0; i < size*NEW_GENERATION_RATIO; ++i) {
-        vector<Solution*> parents = extract(2);
-        solutions.push_back(crossover(parents.at(0), parents.at(1)));
+        vector<Solution*> parents = extract(2); // Sceglie i due genitori con K-tournament
+        solutions.push_back(crossover(parents.at(0), parents.at(1))); // Crea un nuovo elemento, secondo cross-over uniforme
     }
     // sfoltisce la popolazione scegliendono N con montecarlo, nella scelta faccio anche l'eventuale mutazione
     vector <Solution* > newPopulation;
@@ -51,8 +52,8 @@ void Population::evolvePopulation(){
     this->averageFitness = 0;
     double best = INT_MAX;
     double worst = 0;
-    int bi, wi;
-    for (int i = 0; i < size; ++i) {
+    unsigned int bi= 0, wi = 0; // best_index, worst_index
+    for (unsigned int i = 0; i < size; ++i) {
         Solution* selected = montecarloSelection(solutions);
         // mutate fa il delete della soluzione, quindi prima di chiamarla devo toglierla da solutions
         solutions.erase(std::remove(solutions.begin(), solutions.end(), selected), solutions.end());
@@ -108,7 +109,7 @@ Solution* Population::montecarloSelection(vector<Solution*> solutions) {
     assert(val <= tot);
     // sommo tutti i valori di fitness, finché non diventano maggiori del valore ottenuto
     // quando diventano maggiori vuol dire che l'indice che ha reso maggiore in numero è quello scelto casualente
-    int i = 0;
+    unsigned int i = 0;
     double sum = 0;
     while (val > sum){
         sum += solutions.at(i)->getFitness();
@@ -139,7 +140,8 @@ Solution* Population::mutate(Solution* solution){
 
 /**
  * Estrae n soluzioni dalla popolazione.
- * La scelta viene fatta con K-tournament, utilizzando un K proporzionale alla dimensione della popolazione
+ * La scelta viene fatta con K-tournament, utilizzando un K proporzionale alla dimensione della popolazione.
+ * Prima vengono scelti causalmente K elementi dalla popolazione e poi tra questi viene scelto il migliore.
  * K = N/10
  * */
 vector<Solution*> Population::extract(int n) {
@@ -162,7 +164,7 @@ vector<Solution*> Population::extract(int n) {
 }
 
 /**
- * Crea una nuova soluzione a combinando 2 soluzioni esistenti.
+ * Crea una nuova soluzione combinando 2 soluzioni esistenti.
  * La combinazione viene fatta considerando gli archi del cammino delle due soluzioni.
  * C'è il vincolo che la nuova soluzione parta dal nodo 0, quindi si controlla tra le due
  * soluzioni qual'è il nodo successivo al nodo 0 e viene fatta la scelta su quale spostarsi.
@@ -201,7 +203,7 @@ Solution *Population::crossover(Solution *s1, Solution *s2) {
         double tot = s1->getFitness() + s2->getFitness();
         double p1 = s1->getFitness()/tot;
         double p2 = s2->getFitness()/tot;
-        assert (p1+p2 ==1);
+        // assert (p1+p2 ==1);
 
         newPath[i] = weightedChoice(s1Next, s2Next, p1);
     }
