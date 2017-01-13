@@ -4,7 +4,8 @@
 
 #include "Population.h"
 #include <assert.h>
-
+#include <algorithm>
+#include <climits>
 
 Population::Population(unsigned int size, double mutationProbability, double newGenerationRatio, Problem *problem) {
     this->size = size;
