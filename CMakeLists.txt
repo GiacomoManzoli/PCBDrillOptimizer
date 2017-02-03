@@ -14,8 +14,8 @@ FIND_PACKAGE(CPLEX REQUIRED)
 
 INCLUDE_DIRECTORIES(include ${CPLEX_INCLUDE_DIR})
 
-add_executable(Parte_2___Meta_eurstiche ${SOURCE_FILES})
+add_executable(P2_CPLEX ${SOURCE_FILES})
 
-TARGET_LINK_LIBRARIES(Parte_2___Meta_eurstiche  ${CPLEX_LIBRARIES})
+TARGET_LINK_LIBRARIES(P2_CPLEX  ${CPLEX_LIBRARIES})
 
 add_executable(P2_Meta_Test ${SOURCE_FILES_2})

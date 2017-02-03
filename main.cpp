@@ -41,7 +41,7 @@ int main() {
     ofstream myfile;
     myfile.open("outputs/gen_n50.csv");
 
-    myfile << "pop_size;mutation;generation;istance;iters;worst;avg;best"<<endl;
+    /*myfile << "pop_size;mutation;generation;istance;iters;worst;avg;best"<<endl;
     cout << "Inizio batteria di risoluzioni "<<endl;
     for (unsigned int a = 0; a < 3; a++){
         for (unsigned int b = 0; b < 3; b++){
@@ -58,7 +58,7 @@ int main() {
                         GASolver* solver = new GASolver(
                                 p,
                                 populationSizes[a],
-                                4, // Timelimit di 1 minuto
+                                1, // Timelimit di 1 minuto
                                 mutationRates[b],
                                 newGenerationRatios[c]);
                         Solution* solution = solver->solve();
@@ -80,7 +80,7 @@ int main() {
     }
     myfile.close();
 
-
+*/
 
     // per ogni istanza
     // provo 5 volte
@@ -88,10 +88,12 @@ int main() {
 
 
     // CPLEX
-    //CPLEXSolver* solver = new CPLEXSolver(problem);
-    //Solution* sol1 = solver->solve();
-    //cout << "CPLEX: "<<endl;
-    //sol1->printPath();
+    string path =  "istances/20_points.txt";
+    Problem* p = new Problem(path);
+    CPLEXSolver* solver = new CPLEXSolver(p);
+    Solution* sol1 = solver->solve();
+    cout << "CPLEX: "<<endl;
+    sol1->printPath();
 
 
 
