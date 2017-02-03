@@ -12,14 +12,14 @@ int main() {
     srand(time(NULL));
     std::cout << "Hello, World! from main.cpp" << std::endl;
 
-    /*
+
      unsigned int maxTimes[4] {
             1,  // 1 seconod0
             10, // 10 secondi
             60, // 1 minuto
             600 // 10 minuti
     };
-*/
+
     const unsigned int START_SIZE = 5;
     const unsigned int STEP = 5;
 
@@ -52,35 +52,51 @@ int main() {
     };
 
     ofstream myfile;
-    myfile.open("outputs/benchmark/cplex.csv");
+    myfile.open("outputs/benchmark/ga_pseudo.csv");
     myfile << "size;requested_time;istanceName"<<endl;
 
     unsigned int currentSize = START_SIZE;
     cout << "Inizio batteria di risoluzioni "<<endl;
-    for (unsigned int i = 0; i < 25; i++){
+    for (unsigned int i = 0; i < 2; i++){
         cout << "---------"<<endl;
         cout << "Dimensione: " << currentSize << endl;
         string currentIstance = istancesPaths[i];
-        clock_t t1, t2;
 
-        Problem *p = new Problem(currentIstance);
+        for (unsigned int t = 0; t < 4; t++){
+            unsigned int currentTime = maxTimes[t];
 
-        t1 = clock();
-        CPLEXSolver *solver = new CPLEXSolver(p);
-        solver->solve();
-        t2 = clock();
+            if (currentSize < 30 && currentTime == 600) continue; // Risparmio un po' di esecuzionioni
 
-        double elapsedTime = (double)(t2-t1) / CLOCKS_PER_SEC;
-        cout << "Tempo necessario: "<< elapsedTime << endl;
+            cout<< "Tempo massimo "<< currentTime << endl;
 
-        myfile << currentSize <<";";
-        myfile << elapsedTime <<";";
-        myfile << currentIstance <<endl;
+
+            for (unsigned int k = 0; k < 5; k++){
+                clock_t t1, t2;
+
+                Problem *p = new Problem(currentIstance);
+
+                GASolver *solver = new GASolver(
+                        p,
+                        100,
+                        currentTime,
+                        0.01,
+                        1.1
+                );
+                solver->solve();
+
+                double elapsedTime = (double)(t2-t1) / CLOCKS_PER_SEC;
+                cout << "Tempo necessario: "<< elapsedTime << endl;
+                myfile << currentSize <<";";
+                myfile << elapsedTime <<";";
+                myfile << currentIstance <<endl;
+                delete solver;
+                delete p;
+            }
+
+
+        }
         currentSize += STEP;
-        delete solver;
-        delete p;
     }
-
     myfile.close();
     return 0;
 }
