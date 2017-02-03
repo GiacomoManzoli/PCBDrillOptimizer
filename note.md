@@ -31,7 +31,7 @@ Inidice:
                 - Valore migliore trovato mediamente e gap dall'ottimo
                 - Numero di volte in cui è stata trovata una soluzione ottima
             
-            Come istanze uso le 2 dall'immagine, 10 da 20 elementi (5 pseudo e 5 random), 10 da 50 e 10 da 100
+            Ho provato POPSIZE 100, 250 , 500, Mutation rate = 0.01, 0.05, 0.1 e NEWGENRATIO su 1.1, 1.5, 2
 3. Contronto tra CPLEX e GA.
     1. Generazione delle istanze in modo pseudo-random
     2. Test: 1 run di CPEX, contro la media di 5 run di GA.

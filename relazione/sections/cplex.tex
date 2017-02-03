@@ -1,0 +1,95 @@
+% !TEX encoding = UTF-8
+% !TEX program = pdflatex
+% !TEX root = relazione-MEMOC.tex
+% !TeX spellcheck = it_IT
+
+\section{CPLEX} \label{sec:cplex}
+
+Il modello CPLEX è stato implementato come specificato nella consegna della prima esercitazione con dei particolari accorgimenti per rendere il codice più comprensibile e mantenibile:
+
+\begin{itemize}
+	\item Le informazioni relative al problema e ad una sua possibile soluzione sono state modellate con due classi \texttt{Problem} e \texttt{Solution}. Inoltre, tutta la logica di risoluzione è stata incapsulata nella classe \texttt{CPLEXSolver}.
+	\item Durante la dichiarazione delle variabili viene costruita una mappa di supporto per rendere più agevole l'utilizzo delle variabili all'interno dei vincoli. Viene inoltre limitato il numero di variabili, evitando di definire le variabili $x_{ii}$ e $y_{ii}$.
+	\item I vincoli vengono definiti uno alla volta, in modo da semplificare la sintassi di definizione.
+\end{itemize}
+
+\subsection{Definizione delle variabili}
+
+Le variabili in CPLEX, una volta create, vengono memorizzate in sequenza all'interno di un array interno del risolutore e l'unico modo per riferirsi ad una variabile è mediante la sua posizione nell'array interno.
+
+Per riferirsi più facilmente alle variabili, viene quindi creata una matrice di dimensione $N\times N$ che associa il ``\textit{nome della variabile}'' alla sua posizione interna nel risolutore.
+
+\begin{lstlisting}[language=C++, caption=Creazione delle variabili $x_{ij}$]
+// xMap[i][j] è una matrice N x N
+for (int i = 0; i < N; ++i) {
+	for (int j = 0; j < N; ++j) {
+		if (i == j) continue;
+		char htype = 'I';
+		double obj = 0.0;
+		double lb = 0.0;
+		double ub = CPX_INFBOUND;
+		snprintf(name, NAME_SIZE, "x_%d,%d", nodes[i], nodes[j]);
+		char* xname = &name[0];
+		CHECKED_CPX_CALL( CPXnewcols, env, lp, 1, &obj, &lb, &ub, &htype, &xname );
+		xMap[i][j] = createdVars;
+		createdVars++;
+	}
+}
+\end{lstlisting}
+
+\noindent La mappatura del nome viene fatta nella riga 12 del frammento: \texttt{createdVars} è una variabile che tiene traccia del numero di variabili che sono state create nel risolutore e quindi la prossima variabile aggiunta avrà come indice interno il valore di \texttt{createdVars}. Il valore dell'indice viene quindi memorizzato nella mappa e poi incrementato, in modo che alla successiva iterazione dei ciclo, questo sia ancora corretto.
+
+Nello stesso frammento di codice è possibile osservare come \textbf{non} vengano create le variabili $x_{ii}$, questo perché quando i due indici sono uguali, l'\texttt{if} in riga 4 blocca l'esecuzione del corpo. 
+Questa scelta è stata fatta perché tale variabile non è significativa per il problema, in quanto scegliere di spostare la trivella lungo l'arco $(i,i)$ equivale al lasciare ferma la trivella.
+
+Quanto riportato è stato effettuato anche per le variabili $y_{ij}$.
+
+\subsection{Definizione dei vincoli}
+
+CPLEX permette di definire più vincoli con una sola istruzione, tuttavia la notazione per sfruttare questa possibilità è poco pratica da usare, in quanto richiede che gli indici delle variabili e i corrispettivi coefficienti vengano passati come una matrice sparsa, linearizzata in un vettore.
+Se invece viene creato un vincolo alla volta, non c'è la necessità di gestire la matrice sparsa, in quanto questa è composta da una sola riga e quindi può essere considerata come vettore. 
+Detto in altre parole, non è necessario utilizzare il vettore \texttt{rmatbeg} per tenere traccia dell'inizio delle varie righe, dato che essendoci un'unica riga, questa inizierà alla posizione 0 degli array utilizzati per definire il vincolo.
+
+\begin{lstlisting}[language=C++, caption=Esempio di creazione di una serie di vincoli]
+// Vincoli sul flusso in ingresso
+for (int j = 0; j < N; ++j){
+	std::vector<int> varIndex(N-1);
+	std::vector<double> coef(N-1);
+	int idx = 0;
+	// Recupero gli indici dalla mappa delle varibaili
+	for (int i = 0; i < N; ++i) {
+		if (i==j) continue;
+		varIndex[idx] = yMap[i][j];
+		coef[idx] = 1;
+		idx++;
+	}
+	char sense = 'E';
+	double rhs = 1;
+	snprintf(name, NAME_SIZE, "in_%d",j+1);
+	char* cname = (char*)(&name[0]);
+
+	int matbeg = 0;
+	CHECKED_CPX_CALL( CPXaddrows, env, lp, 
+						0, // Numero di variabili da creare
+						1, // Numero di vincoli da creare
+						varIndex.size(), // Numero di variabili nel vincolo con coeff != 0
+						&rhs, // Parte destra del vincolo
+						&sense, // Senso
+						&matbeg, // 0 perché creo un solo vincolo
+						&varIndex[0], // Inizio dell'array con gli indici delle variabili
+						&coef[0], // Inizio dell'array con i coefficienti delle variabili
+						NULL,  // Nomi per le nuove variabili
+						&cname // Nome del vincolo
+					);
+}
+\end{lstlisting}
+
+\noindent Dal codice sopra riportato si può osservare come la chiamata della riga 19 definisce solamente un vincolo, pertanto per generare tutti vincoli del tipo
+
+$$
+\sum\limits_{j : (i,j) \in A} y_{ij} = 1 \quad \forall j \in N
+$$
+
+\noindent è necessario effettuare un iterazione esterna con il ciclo \texttt{for} di riga 2.
+
+Questo modo di definire i vincoli potrebbe essere leggermente meno efficiente, dato che effettua più chiamate ai metodi del risolutore, ma l'impatto sulle prestazioni rimane comunque basso, dato che i vincoli vengono creati solamente all'inizializzazione del modello e il tempo necessario è molto inferiore rispetto a quello necessario per l'ottimizzazione.

@@ -58,7 +58,7 @@ int main() {
                         GASolver* solver = new GASolver(
                                 p,
                                 populationSizes[a],
-                                2, // Timelimit di 1 minuto
+                                4, // Timelimit di 1 minuto
                                 mutationRates[b],
                                 newGenerationRatios[c]);
                         Solution* solution = solver->solve();

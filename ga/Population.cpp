@@ -31,8 +31,12 @@ Population::Population(unsigned int size, double mutationProbability, double new
         this->averageFitness += solFitness;
     }
     this->averageFitness/= size;
-    this->best = solutions.at(bi);
-    this->worst = solutions.at(wi);
+
+    //this->best = solutions.at(bi);
+    //this->worst = solutions.at(wi);
+
+    this->best = new Solution(problem, solutions.at(bi)->getPath());
+    this->worst = new Solution(problem, solutions.at(wi)->getPath());
 }
 
 /**
@@ -74,8 +78,10 @@ void Population::evolvePopulation(){
     }
     solutions = newPopulation;
     this->averageFitness/= size;
-    this->best = solutions.at(bi);
-    this->worst = solutions.at(wi);
+    //this->best = solutions.at(bi);
+    //this->worst = solutions.at(wi);
+    this->best = new Solution(problem, solutions.at(bi)->getPath());
+    this->worst = new Solution(problem, solutions.at(wi)->getPath());
 }
 
 
@@ -104,16 +110,24 @@ Solution* Population::montecarloSelection(vector<Solution*> solutions) {
     for (unsigned int i = 0; i < solutions.size(); ++i) {
         tot += solutions.at(i)->getFitness();
     }
+    vector<double> adjustedCosts; // "Aggiusto i costi" in modo che quelli che costano poco abbiano maggior probabilità
+    // di essere scelti
 
-    double val = (rand() / (double) RAND_MAX) * tot; // genero un numero tra 0 e tot
+    double adjustedTot = 0;
+    for (int i = 0; i < solutions.size(); ++i) {
+        double adjustedCost = tot - solutions.at(i)->getFitness();
+        adjustedCosts.push_back(adjustedCost);
+        adjustedTot += adjustedCost; // Aggiungo l'ultimo elemento al totale
+    }
+    double val = (rand() / (double) RAND_MAX) * adjustedTot; // genero un numero tra 0 e tot
     assert(val >= 0);
-    assert(val <= tot);
+    assert(val <= adjustedTot);
     // sommo tutti i valori di fitness, finché non diventano maggiori del valore ottenuto
     // quando diventano maggiori vuol dire che l'indice che ha reso maggiore in numero è quello scelto casualente
     unsigned int i = 0;
     double sum = 0;
     while (val > sum){
-        sum += solutions.at(i)->getFitness();
+        sum += adjustedCosts.at(i);
         if (val > sum) {i++;} // evito di incrementare all'ultima iterazione
     }
     assert(i < solutions.size());
@@ -205,8 +219,8 @@ Solution *Population::crossover(Solution *s1, Solution *s2) {
         double p1 = s1->getFitness()/tot;
         double p2 = s2->getFitness()/tot;
         // assert (p1+p2 ==1);
-
-        newPath[i] = weightedChoice(s1Next, s2Next, p1);
+        // se s1 è migliore di s2 --> il fitness di s1 è più basso --> p1 < p2 --> prendo l'inverso
+        newPath[i] = weightedChoice(s1Next, s2Next, 1-p1);
     }
     
     return new Solution(problem, newPath);

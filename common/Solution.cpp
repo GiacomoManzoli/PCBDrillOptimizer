@@ -114,21 +114,25 @@ Node Solution::chooseNode(Node from, vector<Node> nodes, vector< vector<double> 
     for (int i = 0; i < nodes.size(); ++i) {
         tot += C[from][nodes[i]];
     }
-    vector<double> normalizedCosts; // Normalizzo i costi dal nodo di partenza a quelli a cui possono ancora andare
-    double debug_sum = 0;
+    vector<double> adjustedCosts; // "Aggiusto i costi" in modo che quelli che costano poco abbiano maggior probabilità
+    // di essere scelti
+
+    double adjustedTot = 0;
     for (int i = 0; i < nodes.size(); ++i) {
-        normalizedCosts.push_back(C[from][nodes[i]] / tot);
-        debug_sum+=C[from][nodes[i]] / tot;
+        double adjustedCost = tot - C[from][nodes[i]];
+        adjustedCosts.push_back(adjustedCost);
+        adjustedTot += adjustedCost; // Aggiungo l'ultimo elemento al totale
     }
-    double val = rand() / double(RAND_MAX); // genero un numero tra 0 e 1
+
+    double val = (rand() / (double) RAND_MAX) * adjustedTot; // genero un numero tra 0 e tot
     assert(val >= 0);
-    assert(val <= 1);
+    assert(val <= adjustedTot);
     // sommo tutte le probabilità, finché non diventano maggiori del valore ottenuto
     // quando diventano maggiori vuol dire che l'indice che ha reso maggiore in numero è quello scelto casualente
     int i = 0;
     double sum = 0;
     while (val > sum){
-        sum += normalizedCosts[i];
+        sum += adjustedCosts[i];
         if (val > sum) {i++;} // evito di incrementare all'ultima iterazione
     }
     assert(i < nodes.size());

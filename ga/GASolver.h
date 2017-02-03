@@ -19,8 +19,8 @@ private:
     Population* population;
     unsigned int lastIterationsCount;
 public:
-    GASolver(Problem* problem, unsigned int populationSize, unsigned int timeLimit, double mutationProbability, double newGenerationRatio);
-    ~GASolver(){ delete population;}
+    GASolver(Problem *problem, unsigned int populationSize, unsigned int timeLimit, double mutationProbability, double newGenerationRatio);
+    ~GASolver(){ problem = NULL; /*Non cancella problem*/ delete population;}
     Solution* solve();
     Population* getLastPopulation();
     unsigned int getLastIterationsCount();

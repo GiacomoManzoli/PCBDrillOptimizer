@@ -1,0 +1,108 @@
+% !TEX encoding = UTF-8
+% !TEX program = pdflatex
+% !TEX root = relazione-MEMOC.tex
+% !TeX spellcheck = it_IT
+
+\section{Algoritmo Genetico}\label{sec:genetico}
+
+Come meta-euristica ad-hoc si è scelto di implementare un algoritmo genetico seguendo le indicazioni presenti nelle dispense del corso.
+
+\subsection{Scelte progettuali}
+
+Gli algoritmi genetici lasciano molte possibilità di scelta al progettatore e le scelte effettuate influenzano notevolmente l'efficacia dell'algoritmo.
+
+Nel determinare i vari componenti si è cercato di progettare un algoritmo bilanciato, che parta da delle soluzioni buone, ma che converga lentamente grazie alle mutazioni e alla selezione di Montecarlo.
+
+\subsubsection{Codifica delle soluzioni}
+
+Per la codifica delle soluzioni si è scelto di adottare la stessa utilizzata per CPLEX.
+Viene quindi utilizzato un array di lunghezza $N+1$, dove $N$ è il numero di nodi da visitare o fori da effettuare, e rappresenta la sequenza di visita. La dimensione dell'array è di $N+1$ perché viene aggiunto un ultimo elemento sempre fisso a $0$, per imporre il vincolo che la trivella ritorni al punto di partenza.
+Allo stesso modo è imposto il vincolo che il primo elemento dell'array sia 0, in modo che nodo di partenza sia sempre quello e che coincida con il nodo finale.
+
+% TODO inserire immagine 
+
+\subsubsection{Generazione della popolazione iniziale}
+
+La popolazione iniziale viene creata con delle soluzioni generate in modo pseudo-greedy.
+Ovvero, ogni soluzione viene generata incrementalmente a partire dal nodo di partenza, andando a scegliere come nodo successivo un nodo qualsiasi tra quelli ancora da visitare.
+La scelta del nodo viene fatta a caso, dando una maggiore probabilità di essere scelti ai nodi migliori
+
+\subsubsection{Funzione di fitness}
+
+Come funzione di fitness per gli individui è stata utilizzata la funzione obiettivo, ovvero il costo del cammino descritto dalla soluzione.
+
+\subsubsection{Operatore di selezione}
+
+La selezione delle soluzioni da riprodurre viene fatta secondo un \textit{torneo-K}. Vengono scelti casualmente dalla popolazione $K$ individui, con $K = \text{POP\_SIZE}/10$ e tra questi viene scelto il miglior candidato per partecipare alla riproduzione.
+Il processo viene quindi eseguito due volte in modo da scegliere i due genitori.
+
+\subsubsection{Crossover}
+
+Il crossover viene effettuato in modo uniforme utilizzando i due genitori precedentemente scelti, dando maggior probabilità di esser trasmessi ai geni del genitore migliore.
+La combinazione dei geni viene effettuata costruendo un nuovo cammino a partire dagli archi presenti nei cammini dei due genitori.
+
+Sia $succ(x, G)$ il nodo successivo al nodo $x$ nel cammino della soluzione $G$, pertanto nella soluzione $G$ sarà presente l'arco $(x, succ(x,G))$ e siano $G_1$ e $G_2$ i due genitori della nuova soluzione.
+
+Si ha quindi che la costruzione del nuovo cammino partirà dal nodo 0 e pertanto il secondo nodo del cammino verrà scelto casualmente tra $succ(0,G_1)$ e $succ(0,G_2)$.
+Al passo successivo, l'ultimo nodo inserito nel nuovo cammino sarà un nodo $y$ e pertanto la scelta del nodo su cui spostarsi sarà tra $succ(y,G_1)$ o $succ(y, G_2)$.
+Il procedimento viene ripetuto finché non sarà completato il ciclo, tornando al nodo 0.
+
+Durante la costruzione del figlio possono capitare alcuni casi particolari:
+
+\begin{itemize}
+	\item Uno dei due possibili successori è già presente nel cammino. In questo caso viene scelto l'altro.
+	\item Entrambi i nodi fanno già parte del cammino. Il questo caso come successore viene scelto il nodo migliore.
+	\item Il nodo finale del cammino deve essere il nodo 0. Quindi l'ultimo arco viene scelto forzatamente in modo che sia verso il nodo 0.
+\end{itemize}
+
+Da notare che per come sono gestiti questi casi particolari non possono essere generate soluzioni non valide.
+
+\subsubsection{Mutazione}
+
+\`E stata prevista la possibilità che durante l'evoluzione delle popolazione, alcune soluzioni subiscano una mutazione.
+
+Una mutazione consiste nel rimescolare l'ordine di visita dei nodi interni del cammino. In questo modo la mutazione viene fatta velocemente e non invalida la soluzione, perché il primo e l'ultimo nodo vistato sarà sempre il nodo 0.
+
+\subsubsection{Sostituzione della popolazione}
+
+La sostituzione delle popolazione viene effettuata generando prima un numero $R$ di individui proporzionale alla dimensione della popolazione. Dopodiché la popolazione viene riportata alla dimensione di partenza, selezionando con il metodo di Montecarlo $N$ soluzioni tra le $N+R$ disponibili.
+
+\subsubsection{Criterio di stop}
+
+Come criterio d'arresto è stato utilizzato un time limit che può essere specificato all'avvio dell'algoritmo.
+
+La scelta è ricaduta su questa condizione d'arresto perché così risulta più semplice effettuare il confronto con CPLEX e perché l'altro criterio provato, ovvero fermare l'algoritmo dopo $k$ iterazioni che non hanno migliorato la miglior soluzione, richiedeva troppo tempo d'esecuzione a causa del metodo di sostituzione della popolazione.
+Infatti, tra un'iterazione e l'altra può essere scartata anche la soluzione migliore e quindi l'iterazione successiva può risultare migliorativa anche se in realtà non lo è.
+
+L'altro criterio d'arresto preso in considerazione è stato un limite sulle iterazioni, ma facendo le varie prove si è osservato che è preferibile impostare un tempo limite fisso piuttosto che il numero massimo di iterazioni.
+
+\subsection{Parametri dell'algoritmo e processo di ottimizzazione}
+
+L'algoritmo così implementato richiede che siano specificati i seguenti parametri:
+
+\begin{itemize}
+	\item\texttt{POPULATION\_SIZE}: dimensione della popolazione;
+	\item\texttt{MUTATION\_RATE}: probabilità di mutazione:
+	\item\texttt{GROWTH\_RATIO}: soluzioni generate ad ogni iterazione;
+	\item\texttt{TIME\_LIMIT}: tempo limite per l'esecuzione dell'algoritmo.
+\end{itemize}
+
+\subsubsection{Esperimenti per l'ottimizzazione dei parametri}
+
+Prima di confrontare l'approccio genetico con CPLEX è stata eseguita una leggera ottimizzazione dei parametri.
+
+Si sono quindi provate le varie possibili combinazioni per la risoluzione di varie istanze di dimensioni diverse (50, 100, 150 punti) e generate sia in modo casuale che pseudo-casuale.
+Le varie prove sono state poi ripetute più volte ed è stata effettuata una media dei risultati.
+
+I valori per i parametri che sono stati provati sono:
+
+\begin{itemize}
+	\item \texttt{POPULATION\_SIZE}: 100, 250, 500;
+	\item \texttt{MUTATION\_RATE}: 0.01, 0.05, 0.1;
+	\item \texttt{GROWTH\_RATIO}: 1.1, 1.5, 2;
+	\item \texttt{TIME\_LIMIT}: 1 minuto.
+\end{itemize}
+
+% Todo aggiungere esiti
+
+

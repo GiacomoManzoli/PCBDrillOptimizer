@@ -45,7 +45,11 @@ private:
 
 public:
     Population(unsigned int size, double mutationProbability, double newGenerationRatio,  Problem* problem);
-    ~Population() {delete best; delete worst; }
+    ~Population() {
+        problem = nullptr;
+        delete best;
+        delete worst;
+    }
     void evolvePopulation();
     Solution* getBestSolution();
     Solution* getWorstSolution();

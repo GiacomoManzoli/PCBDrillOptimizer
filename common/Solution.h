@@ -17,6 +17,7 @@ private:
 public:
     Solution(Problem* problem);
     Solution(Problem* problem, vector<Node> path);
+    ~Solution() { problem = nullptr;}
     double getFitness() const;
     vector<Node> getPath() const;
     void printPath() const;

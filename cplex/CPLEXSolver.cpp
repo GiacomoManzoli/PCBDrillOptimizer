@@ -237,7 +237,7 @@ CPLEXSolver::CPLEXSolver(Problem *problem) {
 
 }
 
-Solution *CPLEXSolver::solve() { // TODO completare
+Solution *CPLEXSolver::solve() {
     // Risoluzione
     CHECKED_CPX_CALL( CPXmipopt, env, lp );
 
