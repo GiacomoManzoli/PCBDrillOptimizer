@@ -36,7 +36,6 @@ Problem::Problem(unsigned int N) {
  * Costruisce un'istanza caricandola da file
  * */
 Problem::Problem(string fileName) {
-    fileName = "istances/genetic/rand_n50_1_distances.txt";
     fstream file(fileName, ios_base::in);
     file >> N;
     nodes.reserve(N); // crea i "nodi" del problema

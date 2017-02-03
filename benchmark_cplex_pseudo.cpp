@@ -10,16 +10,8 @@ using namespace std;
 
 int main() {
     srand(time(NULL));
-    std::cout << "Hello, World! from main.cpp" << std::endl;
+    std::cout << "Hello, World! from benchmark_cplex_pseudo.cpp" << std::endl;
 
-    /*
-     unsigned int maxTimes[4] {
-            1,  // 1 seconod0
-            10, // 10 secondi
-            60, // 1 minuto
-            600 // 10 minuti
-    };
-*/
     const unsigned int START_SIZE = 5;
     const unsigned int STEP = 5;
 
@@ -52,7 +44,7 @@ int main() {
     };
 
     ofstream myfile;
-    myfile.open("outputs/benchmark/cplex.csv");
+    myfile.open("outputs/benchmark/cplex_pseudo.csv");
     myfile << "size;requested_time;istanceName"<<endl;
 
     unsigned int currentSize = START_SIZE;

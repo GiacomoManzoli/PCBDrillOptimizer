@@ -133,6 +133,12 @@ def generatePseudoRandomInstance(N):
 
     assert extraPairs == 0
     assert len(points) == N
+    if oneMore:
+        while True:
+            extraPoint = (random.randint(0, W), random.randint(0, H))
+            if not extraPoint in points:
+                points.append(extraPoint)
+                break
     distances = computeDistances(points)
     return (W, H, points, distances)
 
@@ -197,8 +203,8 @@ def main(argv):
     print "Larghezza: ",W, "Altezza: " ,H, "#Points: ", len(points) 
     print points
 
-    printPointsFile(fileName, W, H, points)
-    printDistancesFile(fileName, distances)
+    printPointsFile(fileName+str(N), W, H, points)
+    printDistancesFile(fileName+str(N), distances)
     #printIstanceToFile(fileName, W, H, points, distances)
 
 if __name__ == '__main__':
