@@ -32,7 +32,7 @@ c_ij -> costo per spostarsi lungo l'arco (i,j)
 NB: Dopo aver visitato tutti i nodi la trivella deve ritornare alla posizione di partenza
 */
 
-CPLEXSolver::CPLEXSolver(Problem *problem) {
+CPLEXSolver::CPLEXSolver(Problem *problem, unsigned int timeLimit) {
     this->problem = problem;
     // Creazione dell'ambiente CPLEX
     this->env = CPXopenCPLEX(&status);
@@ -235,9 +235,15 @@ CPLEXSolver::CPLEXSolver(Problem *problem) {
     // Stampa il modello su file
     CHECKED_CPX_CALL( CPXwriteprob, env, lp, "problem.lp", 0 );
 
+
+    // Imposta i parametri del modello
+    CPXsetdblparam(env, CPX_PARAM_TILIM, timeLimit);
+
 }
 
 Solution *CPLEXSolver::solve() {
+
+
     // Risoluzione
     CHECKED_CPX_CALL( CPXmipopt, env, lp );
 
@@ -269,7 +275,6 @@ vector<Node> CPLEXSolver::extractPath(vector<double> vals, int start, int cnt){
     if (cnt == l) { return vector<Node>(); }
 
     for (int i = 0; i < l; ++i) {
-
         if ( i != start && round(vals[yMap[start][i] ]) == 1) {
             // i è il nodo in cui mi sposto
             vector<Node> res;
@@ -279,4 +284,6 @@ vector<Node> CPLEXSolver::extractPath(vector<double> vals, int start, int cnt){
             return  res;
         }
     }
+
+    return vector<Node>();
 }

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.10.7)  3 FEB 2017 20:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.10.7)  9 FEB 2017 17:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1503,7 +1503,7 @@ Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/lmr/m/sc/12'.
 (microtype)             Ignoring protrusion settings for this character.
 
-<immagini/logo-unipd.png, id=79, 943.525pt x 949.5475pt>
+<immagini/logo-unipd.png, id=99, 943.525pt x 949.5475pt>
 File: immagini/logo-unipd.png Graphic file (type png)
 
 <use immagini/logo-unipd.png>
@@ -1569,11 +1569,11 @@ l.237 	\clearpage
                   [1
 
 ] (./sections/introduzione.tex
-<immagini/scheda.png, id=118, 631.35875pt x 433.62pt>
+<immagini/scheda.png, id=142, 631.35875pt x 433.62pt>
 File: immagini/scheda.png Graphic file (type png)
 
 <use immagini/scheda.png>
-Package pdftex.def Info: immagini/scheda.png used on input line 22.
+Package pdftex.def Info: immagini/scheda.png used on input line 24.
 (pdftex.def)             Requested size: 233.71138pt x 160.51628pt.
 ) (./sections/cplex.tex
 LaTeX Font Info:    Try loading font information for OMS+lmr on input line 11.
@@ -1617,25 +1617,42 @@ File: utf8.def 2016/02/28 v1.1s UTF-8 support for inputenc
 )
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2016/02/28 v1.1s UTF-8 support for inputenc
-) [3])
-(./sections/genetico.tex [4] [5]) (./sections/confronto.tex)
-(./sections/conclusioni.tex) (./sections/codice.tex) [6]
+) [3]
+<immagini/cplex-time.png, id=192, 776.1798pt x 478.4274pt>
+File: immagini/cplex-time.png Graphic file (type png)
+
+<use immagini/cplex-time.png>
+Package pdftex.def Info: immagini/cplex-time.png used on input line 138.
+(pdftex.def)             Requested size: 420.67763pt x 259.30327pt.
+) (./sections/genetico.tex [4] [5 <./immagini/cplex-time.png>] <immagini/path-r
+appr.pdf, id=230, 217.70735pt x 90.71602pt>
+File: immagini/path-rappr.pdf Graphic file (type pdf)
+
+<use immagini/path-rappr.pdf>
+Package pdftex.def Info: immagini/path-rappr.pdf used on input line 24.
+(pdftex.def)             Requested size: 280.4565pt x 116.87187pt.
+ [6 <./immagini/path-rappr.pdf>] [7] [8]
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
+ine 156.
+)
+(./sections/confronto.tex) (./sections/conclusioni.tex) (./sections/codice.tex
+[9]) [10]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 250.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 250.
  (./relazione-MEMOC.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 250.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 250.
 Package rerunfilecheck Info: File `relazione-MEMOC.out' has not changed.
-(rerunfilecheck)             Checksum: 9281E766760B65ACB797898132C48A6A;1410.
+(rerunfilecheck)             Checksum: D1BD4A4C2F1D358E7454BAFBBCBBDCE6;1808.
  ) 
 Here is how much of TeX's memory you used:
- 25674 strings out of 493014
- 451554 string characters out of 6133351
- 708311 words of memory out of 5000000
- 28483 multiletter control sequences out of 15000+600000
- 73824 words of font info for 99 fonts, out of 8000000 for 9000
+ 25815 strings out of 493014
+ 454350 string characters out of 6133351
+ 709120 words of memory out of 5000000
+ 28582 multiletter control sequences out of 15000+600000
+ 75627 words of font info for 114 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,6n,99p,860b,2370s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,17n,99p,860b,2370s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
 cal/texlive/2016/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/20
 16/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2016/texmf-d
@@ -1656,10 +1673,10 @@ ublic/lm/lmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/lm/lmr
 i10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/lm/lmri12.pfb></
 usr/local/texlive/2016/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/
 texlive/2016/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
-Output written on relazione-MEMOC.pdf (7 pages, 464645 bytes).
+Output written on relazione-MEMOC.pdf (11 pages, 562847 bytes).
 PDF statistics:
- 279 PDF objects out of 1000 (max. 8388607)
- 248 compressed objects within 3 object streams
- 76 named destinations out of 1000 (max. 500000)
- 23207 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 348 PDF objects out of 1000 (max. 8388607)
+ 307 compressed objects within 4 object streams
+ 90 named destinations out of 1000 (max. 500000)
+ 24281 words of extra memory for PDF output out of 24883 (max. 10000000)
 

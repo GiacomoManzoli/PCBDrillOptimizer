@@ -15,7 +15,7 @@ Population::Population(unsigned int size, double mutationProbability, double new
     this->averageFitness = 0;
     double best = INT_MAX;
     double worst = 0;
-    int bi, wi;
+    int bi = 0, wi = 0;
 
     for (int i = 0; i < size; ++i) {
         solutions.push_back(new Solution(problem));
@@ -86,11 +86,11 @@ void Population::evolvePopulation(){
 
 
 Solution *Population::getBestSolution() {
-    return best;
+    return new Solution(problem, best->getPath());
 }
 
 Solution *Population::getWorstSolution() {
-    return worst;
+    return new Solution(problem, worst->getPath());;
 }
 
 double Population::getAverageFitness() {
@@ -114,7 +114,7 @@ Solution* Population::montecarloSelection(vector<Solution*> solutions) {
     // di essere scelti
 
     double adjustedTot = 0;
-    for (int i = 0; i < solutions.size(); ++i) {
+    for (unsigned int i = 0; i < solutions.size(); ++i) {
         double adjustedCost = tot - solutions.at(i)->getFitness();
         adjustedCosts.push_back(adjustedCost);
         adjustedTot += adjustedCost; // Aggiungo l'ultimo elemento al totale
@@ -217,7 +217,6 @@ Solution *Population::crossover(Solution *s1, Solution *s2) {
         // Entrambi i nodi sono nodi buoni
         double tot = s1->getFitness() + s2->getFitness();
         double p1 = s1->getFitness()/tot;
-        double p2 = s2->getFitness()/tot;
         // assert (p1+p2 ==1);
         // se s1 è migliore di s2 --> il fitness di s1 è più basso --> p1 < p2 --> prendo l'inverso
         newPath[i] = weightedChoice(s1Next, s2Next, 1-p1);
@@ -294,7 +293,7 @@ Solution* Population::chooseRandom(vector<Solution*> pool, vector<Solution*>  av
         Solution* candidate = pool.at(val);
 
         bool goodCandidate = true;
-        for (int i = 0; i < avoid.size(); ++i) {
+        for (unsigned int i = 0; i < avoid.size(); ++i) {
             //if (avoid.at(i)->equals(*candidate)) { // se uso equals ci sono troppe soluzioni con lo stesso path quando mi avvicino alla convergenza e quindi diventa troppo pesante
             if (avoid.at(i) == candidate) {
                 goodCandidate = false;

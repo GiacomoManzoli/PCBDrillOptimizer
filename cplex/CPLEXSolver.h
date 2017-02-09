@@ -23,7 +23,7 @@ private:
     vector<Node> extractPath(vector<double> vals, int start=0, int cnt=0);
     Problem* problem;
 public:
-    CPLEXSolver(Problem* problem);
+    CPLEXSolver(Problem* problem, unsigned int timeLimit);
     Solution* solve();
 
 

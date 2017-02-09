@@ -203,8 +203,8 @@ def main(argv):
     print "Larghezza: ",W, "Altezza: " ,H, "#Points: ", len(points) 
     print points
 
-    printPointsFile(fileName+str(N), W, H, points)
-    printDistancesFile(fileName+str(N), distances)
+    printPointsFile(fileName, W, H, points)
+    printDistancesFile(fileName, distances)
     #printIstanceToFile(fileName, W, H, points, distances)
 
 if __name__ == '__main__':

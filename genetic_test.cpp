@@ -60,6 +60,7 @@ int main() {
                         myfile << population->getWorstSolution()->getFitness()<<";";
                         myfile << population->getAverageFitness()<<";";
                         myfile << population->getBestSolution()->getFitness()<<endl;
+                        delete solution;
                         delete solver;
                         delete p;
                     }

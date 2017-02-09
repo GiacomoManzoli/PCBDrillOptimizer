@@ -93,3 +93,71 @@ $$
 \noindent è necessario effettuare un iterazione esterna con il ciclo \texttt{for} di riga 2.
 
 Questo modo di definire i vincoli potrebbe essere leggermente meno efficiente, dato che effettua più chiamate ai metodi del risolutore, ma l'impatto sulle prestazioni rimane comunque basso, dato che i vincoli vengono creati solamente all'inizializzazione del modello e il tempo necessario è molto inferiore rispetto a quello necessario per l'ottimizzazione.
+
+\subsection{Test del modello}
+
+\`E stato richiesto di osservare qual'è la dimensione massima di un problema che il modello CPLEX riesce a risolvere entro un certo periodo di tempo.
+
+Per fare ciò sono state prima generate 5 istanze casuali e 5 pseudo casuali per ogni dimensione $5$, $10$, $\ldots$, $100$ ed è stato eseguito CPLEX con un time limit di 10 minuti. Sono stati poi presi in considerazione 4 livelli di time limit: un secondo, dieci secondi, un minuto e dieci minuti ed è stato osservato qual'è la massima dimensione che può essere risolta entro tali intervalli.
+I risultati medi delle esecuzioni sulle istanze di varie dimensioni sono riportati nella tabella \ref{tab:cplex-avg} e riassunti nel grafico \ref{fig:cplex-time}, mentre la corrispondenza time limit/difficoltà massima è riassunta nella tabella \ref{tab:cplex-recap}.
+
+\begin{table}[htbp]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{c|c|c|c|c|c|c|c|c|}
+			\cline{2-9}
+			\multicolumn{1}{l|}{} & \multicolumn{4}{c|}{\textbf{Pseudo}} & \multicolumn{4}{c|}{\textbf{Random}} \\ \hline
+			\multicolumn{1}{|l|}{\textbf{Dimensione}} & \multicolumn{1}{l|}{\textbf{\begin{tabular}[c]{@{}l@{}}Tempo \\ medio\end{tabular}}} & \multicolumn{1}{l|}{\textbf{\begin{tabular}[c]{@{}l@{}}Tempo\\ minimo\end{tabular}}} & \multicolumn{1}{l|}{\textbf{\begin{tabular}[c]{@{}l@{}}Tempo\\ massimo\end{tabular}}} & \multicolumn{1}{l|}{\textbf{Fallimenti}} & \multicolumn{1}{l|}{\textbf{\begin{tabular}[c]{@{}l@{}}Tempo\\ medio\end{tabular}}} & \multicolumn{1}{l|}{\textbf{\begin{tabular}[c]{@{}l@{}}Tempo\\ minimo\end{tabular}}} & \multicolumn{1}{l|}{\textbf{\begin{tabular}[c]{@{}l@{}}Tempo\\ massimo\end{tabular}}} & \multicolumn{1}{l|}{\textbf{Fallimenti}} \\ \hline
+			\multicolumn{1}{|c|}{5} & 0,02 & 0,01 & 0,04 & 0 & 0,02 & 0,01 & 0,04 & 0 \\ \hline
+			\multicolumn{1}{|c|}{10} & 0,08 & 0,04 & 0,14 & 0 & 0,06 & 0,03 & 0,08 & 0 \\ \hline
+			\multicolumn{1}{|c|}{15} & 0,14 & 0,06 & 0,23 & 0 & 0,20 & 0,09 & 0,31 & 0 \\ \hline
+			\multicolumn{1}{|c|}{20} & 0,82 & 0,10 & 1,88 & 0 & 0,46 & 0,28 & 0,65 & 0 \\ \hline
+			\multicolumn{1}{|c|}{25} & 1,38 & 0,17 & 3,88 & 0 & 0,92 & 0,43 & 1,57 & 0 \\ \hline
+			\multicolumn{1}{|c|}{30} & 3,51 & 0,16 & 6,80 & 0 & 2,03 & 0,88 & 4,27 & 0 \\ \hline
+			\multicolumn{1}{|c|}{35} & 4,75 & 0,52 & 11,94 & 0 & 3,87 & 1,47 & 6,87 & 0 \\ \hline
+			\multicolumn{1}{|c|}{40} & 129,16 & 0,03 & 600,04 & 1 & 6,53 & 2,32 & 9,03 & 0 \\ \hline
+			\multicolumn{1}{|c|}{45} & 31,50 & 5,01 & 94,31 & 0 & 10,22 & 9,11 & 12,89 & 0 \\ \hline
+			\multicolumn{1}{|c|}{50} & 114,99 & 18,88 & 350,22 & 0 & 18,16 & 13,72 & 24,37 & 0 \\ \hline
+			\multicolumn{1}{|c|}{55} & 36,53 & 26,39 & 47,00 & 0 & 24,98 & 15,83 & 53,49 & 0 \\ \hline
+			\multicolumn{1}{|c|}{60} & 52,91 & 28,03 & 77,75 & 0 & 42,82 & 23,03 & 73,45 & 0 \\ \hline
+			\multicolumn{1}{|c|}{65} & 215,51 & 55,89 & 600,08 & 1 & 81,70 & 62,26 & 119,60 & 0 \\ \hline
+			\multicolumn{1}{|c|}{70} & 196,50 & 60,60 & 600,08 & 1 & 62,39 & 35,62 & 91,72 & 0 \\ \hline
+			\multicolumn{1}{|c|}{75} & 239,86 & 6,97 & 411,80 & 0 & 90,25 & 48,40 & 114,86 & 0 \\ \hline
+			\multicolumn{1}{|c|}{80} & 318,38 & 57,05 & 600,10 & 2 & 203,84 & 89,87 & 399,65 & 0 \\ \hline
+			\multicolumn{1}{|c|}{85} & 245,64 & 93,26 & 600,14 & 1 & 268,20 & 69,19 & 550,24 & 0 \\ \hline
+			\multicolumn{1}{|c|}{90} & 474,56 & 207,08 & 600,17 & 3 & 311,61 & 155,87 & 600,13 & 1 \\ \hline
+			\multicolumn{1}{|c|}{95} & 517,15 & 185,08 & 600,20 & 4 & 445,41 & 238,19 & 600,20 & 1 \\ \hline
+		\end{tabular}%
+	}
+	\caption{Risultatati medi dell'esecuzione del risolutore CPLEX su 5 istanze diverse per ogni dimensione. Tutti i tempi riportati nella tabella sono espressi in secondi.}
+	\label{tab:cplex-avg}
+\end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.9\textwidth]{immagini/cplex-time.png}
+	\caption{Tempo medio impiegato da CPLEX per risolvere le varie istanze}\label{fig:cplex-time}
+\end{figure}
+
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{c|c|c|}
+		\cline{2-3}
+		& \multicolumn{2}{c|}{\textbf{Dimensione}} \\ \hline
+		\multicolumn{1}{|c|}{\textbf{Time limit} (s)} & \textbf{Pseudo}      & \textbf{Rand}     \\ \hline
+		\multicolumn{1}{|c|}{1}                   & 20                   & 25                \\ \hline
+		\multicolumn{1}{|c|}{10}                  & 35                   & 45                \\ \hline
+		\multicolumn{1}{|c|}{60}                  & 60                   & 60                \\ \hline
+		\multicolumn{1}{|c|}{600}                 & 85                   & 95               \\ \hline
+	\end{tabular}
+	\caption{Massima difficoltà mediamente risolvibile entro i rispettivi time limit. Per determinare la difficoltà è stata usata la media, senza prendere in considerazione i casi limite in cui già per $N$ bassi non viene trovata una soluzione.}
+	\label{tab:cplex-recap}
+\end{table}
+
+Dai risultati ottenuti si può osservare che:
+
+\begin{itemize}
+	\item Le istanze generate casualmente sembrano essere mediamente più facili da risolvere rispetto a quelle generate in modo pseudo casuale.
+	\item Per quanto riguarda le istanze pseudo casuali, già con $N=40$ è stata trovata un'istanza che CPLEX non riesce a risolvere entro 10 minuti d'esecuzione.
+	\item Con $N = 100$ solo due istanze di quelle generate casualmente è sono state risolte, mentre di quelle pseudo casuali non ne è stata risolta nessuna. Pertanto sembra che la distribuzione dei punti sia notevolmente influente sulle prestazioni dell'algoritmo.
+\end{itemize}

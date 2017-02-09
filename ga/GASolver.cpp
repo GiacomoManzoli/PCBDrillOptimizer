@@ -27,10 +27,12 @@ Solution *GASolver::solve() {
     cout << "\t Avg: " <<population->getAverageFitness();
     cout << "\t Best: " <<population->getBestSolution()->getFitness() << endl;
 
-    cout << "Evoluzione in corso" <<endl;
+    cout << "Evoluzione in corso..." <<endl;
     unsigned int i = 0;
 
-
+    /* Viene usato time perché in questo caso il CPU time è circa uguale al wall time.
+     * CPLEX invece lavora su più thread e quindi il CPU time è maggiore del wall time.
+     * */
     time_t startingTime = time(0); // espresso in sencondi (UNIX time-stamp)
 
     while (time(0) - startingTime < this->timeLimit) {
@@ -68,23 +70,14 @@ Solution *GASolver::solve() {
     //    population->evolvePopulation();
     //}
 
-
-
-    cout << endl;
     cout << "Popolazione finale" <<endl;
     cout << "Worst: " <<population->getWorstSolution()->getFitness();
     cout << "\t Avg: " <<population->getAverageFitness();
     cout << "\t Best: " <<population->getBestSolution()->getFitness() << endl;
-    Solution* s3 = population->getBestSolution();
+    Solution* sol = population->getBestSolution();
     this->population = population;
     this->lastIterationsCount = i;
-    //cout << "Parent 1" << endl;
-    //parents[0]->printPath();
-    //cout << "Parent 2" << endl;
-    //parents[1]->printPath();
-    //cout << "Offspring" <<endl;
-    //s3->printPath();
-    return s3;
+    return sol;
 
 }
 

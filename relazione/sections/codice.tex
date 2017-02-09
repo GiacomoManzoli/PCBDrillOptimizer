@@ -2,3 +2,26 @@
 % !TEX program = pdflatex
 % !TEX root = relazione-MEMOC.tex
 % !TeX spellcheck = it_IT
+
+\section{Informazioni sul codice e sulla consegna}
+
+Il codice consegnato è suddiviso in varie sotto-directory:
+
+\begin{itemize}
+	\item \texttt{common}: contiene le classi comuni, utilizzate sia dal modello CPLEX che dall'algoritmo genetico.
+	\item \texttt{cplex}: contiene le classi relative all'implementazione del modello CPLEX.
+	\item \texttt{ga}: contiene le classi relative all'implementazione dell'algoritmo genetico.
+\end{itemize}
+
+Il codice è stato poi strutturato in modo simile ad una libreria: per entrambe le parti del progetto c'è una classe che incapsula l'algoritmo risolutivo e che espone un metodo \texttt{solve()}.
+Pertanto non è presente un vero e proprio file principale dell'applicazione.
+
+Vengono però forniti vari file \texttt{.cpp} che contengo degli esempi di utilizzo della libreria e che corrispondo ai programmi utilizzati per eseguire i test.
+Viene anche fornito un \texttt{main.cpp} che risolve in entrambi i modi un'istanza di un problema generata casualmente. Tale programma può essere compilato utilizzando il comando \texttt{make}.
+All'interno del \texttt{Makefile} sono definite anche le regole per compilare gli altri sorgenti.
+
+
+\subsection{Possibili problemi di compilazione}
+
+Il programma \texttt{main.cpp}, e di conseguenza tutto il codice prodotto, compilano correttamente sui computer del laboratorio con \texttt{g++ v5.4}.
+Tuttavia potrebbero esserci dei problemi nel linking delle librerie di CPLEX. In questo caso è necessario andare ad aggiustare il \textit{filepath} definiti all'interno del \texttt{Makefile}.
