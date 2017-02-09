@@ -3,3 +3,6 @@ outputs
 cmake-build-debug
 *.o
 *.out
+*.synctex.gz
+*.log
+*.aux

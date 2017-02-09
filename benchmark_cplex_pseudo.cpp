@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <chrono>
 
 #include "common/Problem.h"
 #include "ga/GASolver.h"

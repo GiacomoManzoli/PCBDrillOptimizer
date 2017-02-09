@@ -18,10 +18,15 @@ CCOPTS = -std=c++11 -c -g -O0 -Wall -Wno-deprecated -Wunused-variable -Wno-sign-
 LINK = g++
 LINKOPTS = -o
 
-# OSX FLAG
+
+## OSX FLAG
 CPX_INCDIR  = /opt/CPLEX_Studio1263/cplex/include
 CPX_LIBDIR  = /opt/CPLEX_Studio1263/cplex/lib/x86-64_osx/static_pic
 CPX_LDFLAGS = -lcplex -lm -pthread
+## Linux/LAB flag
+#CPX_INCDIR  = /opt/CPLEX_Studio/cplex/include
+#CPX_LIBDIR  = /opt/CPLEX_Studio/cplex/lib/x86-64_linux/static_pic
+#CPX_LDFLAGS = -lcplex -lm -pthread
 
 #g++ -std=c++11 tostring.cpp
 
@@ -94,6 +99,6 @@ CPLEXSolver.o : cplex/CPLEXSolver.cpp cplex/CPLEXSolver.h
 
 
 clean :
-	rm -f *.o $(EXENAME) 2>/dev/null
+	rm -f *.o *.out 2>/dev/null
 
 .PHONY: clean
