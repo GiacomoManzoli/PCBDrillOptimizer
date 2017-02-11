@@ -15,11 +15,12 @@
 \contentsline {subsubsection}{\numberline {3.1.5}Crossover}{7}{subsubsection.3.1.5}
 \contentsline {subsubsection}{\numberline {3.1.6}Mutazione}{7}{subsubsection.3.1.6}
 \contentsline {subsubsection}{\numberline {3.1.7}Sostituzione della popolazione}{7}{subsubsection.3.1.7}
-\contentsline {subsubsection}{\numberline {3.1.8}Criterio di stop}{8}{subsubsection.3.1.8}
+\contentsline {subsubsection}{\numberline {3.1.8}Criterio di arresto}{8}{subsubsection.3.1.8}
 \contentsline {subsection}{\numberline {3.2}Parametri dell'algoritmo e processo di ottimizzazione}{8}{subsection.3.2}
 \contentsline {subsubsection}{\numberline {3.2.1}Esperimenti per l'ottimizzazione dei parametri}{8}{subsubsection.3.2.1}
 \contentsline {subsubsection}{\numberline {3.2.2}Risultati}{9}{subsubsection.3.2.2}
 \contentsline {subsection}{\numberline {3.3}Test dell'algoritmo}{9}{subsection.3.3}
-\contentsline {section}{\numberline {4}Confronto}{9}{section.4}
-\contentsline {section}{\numberline {A}Informazioni sul codice e sulla consegna}{9}{appendix.Alph1}
-\contentsline {subsection}{\numberline {A.1}Possibili problemi di compilazione}{10}{subsection.Alph1.1}
+\contentsline {subsubsection}{\numberline {3.3.1}Analisi della convergenza e delle prestazioni}{11}{subsubsection.3.3.1}
+\contentsline {section}{\numberline {4}Conclusioni}{12}{section.4}
+\contentsline {section}{\numberline {A}Informazioni sul codice e sulla consegna}{13}{appendix.Alph1}
+\contentsline {subsection}{\numberline {A.1}Possibili problemi di compilazione}{13}{subsection.Alph1.1}

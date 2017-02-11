@@ -10,14 +10,14 @@ Come meta-euristica ad-hoc si è scelto di implementare un algoritmo genetico se
 
 \subsection{Scelte progettuali}
 
-Gli algoritmi genetici lasciano molte possibilità di scelta al progettatore e le scelte effettuate influenzano notevolmente l'efficacia dell'algoritmo.
+Gli algoritmi genetici lasciano molte possibilità di scelta al progettatore e le scelte effettuate influenzano notevolmente l'efficacia e efficienza dell'algoritmo.
 
 Nel determinare i vari componenti si è cercato di progettare un algoritmo bilanciato, che parta da delle soluzioni buone, ma che converga lentamente grazie alle mutazioni e alla selezione di Montecarlo.
 
 \subsubsection{Codifica delle soluzioni}
 
 Per la codifica delle soluzioni si è scelto di utilizzare un'array di lunghezza $N+1$, dove $N$ è il numero di nodi da visitare o fori da effettuare, che rappresenta la sequenza in cui vengono visitati i nodi. La dimensione dell'array è di $N+1$ perché viene aggiunto un ultimo elemento sempre fisso a $0$ per imporre il vincolo che la trivella ritorni al punto di partenza.
-Allo stesso modo è imposto il vincolo che il primo elemento dell'array sia 0, in modo che nodo di partenza sia sempre quello e che coincida con il nodo finale. Un esempio della codifica è disponibile in figura \ref{fig:rappr}.
+Allo stesso modo è imposto il vincolo che il primo elemento dell'array sia 0, in modo che il nodo di partenza sia sempre quello e che coincida con il nodo finale. Un esempio della codifica è disponibile in figura \ref{fig:rappr}.
 
 \begin{figure}[htbp]
 	\centering
@@ -29,18 +29,18 @@ Allo stesso modo è imposto il vincolo che il primo elemento dell'array sia 0, i
 
 La popolazione iniziale viene creata con delle soluzioni generate in modo pseudo-greedy.
 Ovvero, ogni soluzione viene generata incrementalmente a partire dal nodo di partenza, andando a scegliere come nodo successivo un nodo qualsiasi tra quelli ancora da visitare.
-La scelta del nodo viene fatta a caso, dando una maggiore probabilità di essere scelti ai nodi migliori.
+La scelta del nodo viene effettuata casualmente, dando una maggiore probabilità di essere scelti ai nodi migliori.
 
 Per quanto riguarda la dimensione della popolazione, si è scelto di implementarla come parametro dell'algoritmo, in modo che sia possibile specificare una dimensione diversa in base alla dimensione delle istanze che l'algoritmo si troverà a risolvere.
-Questo perché è ragionevole assumere che istanze di grandi dimensioni hanno un numero maggiore di possibili soluzioni e quindi poter specificare una dimensione \textit{ad-hoc} permette di avere una popolazione sufficientemente grande da rappresentare un campione significativo delle possibili soluzioni.
+Questo perché è ragionevole assumere che istanze di grandi dimensioni abbiano un numero maggiore di possibili soluzioni e quindi poter specificare una dimensione \textit{ad-hoc} permette di avere una popolazione sufficientemente grande da rappresentare un campione significativo delle possibili soluzioni.
 
 \subsubsection{Funzione di fitness}
 
-Come funzione di fitness per gli individui è stata utilizzata la funzione obiettivo, ovvero il costo del cammino descritto dalla soluzione.
+Come funzione di fitness per gli individui è stata utilizzata la funzione obiettivo, ovvero il costo del ciclo descritto dalla soluzione.
 
 \subsubsection{Operatore di selezione}
 
-La selezione delle soluzioni da riprodurre viene fatta secondo un \textit{torneo-K}. Vengono scelti casualmente dalla popolazione $K$ individui, con $K = \texttt{POPULATION\_SIZE}/10$ e tra questi viene scelto il miglior candidato per partecipare alla riproduzione.
+La selezione delle soluzioni da riprodurre viene effettuata secondo un \textit{torneo-K}. Vengono scelti casualmente dalla popolazione $K$ individui, con $K = \texttt{POPULATION\_SIZE}/10$ e tra questi viene scelto il miglior candidato per partecipare alla riproduzione.
 Il processo viene quindi eseguito due volte in modo da scegliere i due genitori.
 
 \subsubsection{Crossover}
@@ -62,24 +62,24 @@ Durante la costruzione del figlio possono capitare alcuni casi particolari:
 	\item Il nodo finale del cammino deve essere il nodo 0. Quindi l'ultimo arco viene scelto forzatamente in modo che sia verso il nodo 0.
 \end{itemize}
 
-Da notare che per come sono gestiti questi casi particolari non possono essere generate soluzioni non valide.
+Da notare che per come sono gestiti questi casi particolari non possono essere generate soluzioni non ammissibili.
 
 \subsubsection{Mutazione}
 
 \`E stata prevista la possibilità che durante l'evoluzione delle popolazione alcune soluzioni subiscano una mutazione.
 
-Una mutazione consiste nel rimescolare l'ordine di visita dei nodi interni del cammino. In questo modo la mutazione viene fatta velocemente e non invalida la soluzione, perché il primo e l'ultimo nodo vistato sarà sempre il nodo 0.
+Una mutazione consiste nel rimescolare l'ordine di visita dei nodi interni del ciclo. In questo modo la mutazione viene fatta velocemente e non invalida la soluzione, perché il primo e l'ultimo nodo vistato sarà sempre il nodo 0.
 
 \subsubsection{Sostituzione della popolazione}
 
 La sostituzione delle popolazione viene effettuata generando prima un numero $R$ di individui proporzionale alla dimensione della popolazione. Dopodiché la popolazione viene riportata alla dimensione di partenza, selezionando con il metodo di Montecarlo $N$ soluzioni tra le $N+R$ disponibili.
 
-\subsubsection{Criterio di stop}
+\subsubsection{Criterio di arresto}
 
-Come criterio d'arresto è stato utilizzato un time limit che può essere specificato all'avvio dell'algoritmo.
+Come criterio d'arresto è stato utilizzato un tempo limite d'esecuzione che può essere specificato all'avvio dell'algoritmo.
 
 La scelta è ricaduta su questa condizione d'arresto perché così risulta più semplice effettuare il confronto con CPLEX e perché l'altro criterio provato, ovvero fermare l'algoritmo dopo $k$ iterazioni che non hanno migliorato la miglior soluzione, richiedeva troppo tempo d'esecuzione a causa del metodo di sostituzione della popolazione.
-Infatti, tra un'iterazione e l'altra può essere scartata anche la soluzione migliore e quindi l'iterazione successiva può risultare migliorativa anche se in realtà non lo è.
+Infatti, tra un'iterazione e l'altra può essere scartata anche la soluzione migliore e quindi l'iterazione successiva poteva risultare migliorativa anche se in realtà non lo era.
 
 Un altro criterio d'arresto preso in considerazione è stato un limite sulle iterazioni, ma facendo le varie prove si è osservato che è preferibile impostare un tempo limite fisso piuttosto che il numero massimo di iterazioni.
 
@@ -98,7 +98,7 @@ L'algoritmo così implementato richiede che siano specificati i seguenti paramet
 
 Prima di testare l'algoritmo genetico in modo analogo a quanto fatto per il modello CPLEX è stata eseguita una leggera ottimizzazione dei parametri.
 
-Si sono quindi provate le varie possibili combinazioni per la risoluzione di varie istanze di dimensioni diverse (50, 100, 150 punti) generate sia in modo casuale che pseudo-casuale.
+Si sono quindi provate le varie possibili combinazioni dei parametri nella risoluzione di varie istanze di dimensioni diverse (50, 100, 150 punti) generate sia in modo casuale che pseudo-casuale.
 Le varie prove sono state poi ripetute 5 volte ed è stata effettuata una media dei risultati.
 
 I valori per i parametri che sono stati provati sono:
@@ -124,8 +124,8 @@ mentre per scegliere la configurazione migliore è stata tenuta in considerazion
 
 \subsubsection{Risultati}
 
-Dall'esecuzione delle prove è emerso che per tutte e tre le possibili dimensioni i risultati migliori si ottengono con \texttt{GROWTH\_RATIO}$= 2$, ovvero andando a generare ad ogni iterazione un numero di individui pari a quello delle popolazione. 
-Per quanto riguarda gli altri parametri si è visto che per $N = 100$ e $N = 150$, la configurazione migliore è \texttt{POPULATION\_SIZE}$ = 500$  e \texttt{MUTATION\_RATE}$ = 0.1$ mentre per $N=50$ è \texttt{POPULATION\_SIZE}$ = 100$ e \texttt{MUTATION\_RATE}$ = 0.05$. 
+Dall'esecuzione delle prove è emerso che per tutte e tre le possibili dimensioni i risultati migliori si ottengono con \texttt{GROWTH\_RATIO} $= 2$, ovvero andando a generare ad ogni iterazione un numero di individui pari al doppio di quello della popolazione. 
+Per quanto riguarda gli altri parametri si è visto che per $N = 100$ e $N = 150$, la configurazione migliore è \texttt{POPULATION\_SIZE} $ = 500$  e \texttt{MUTATION\_RATE} $ = 0.1$ mentre per $N=50$ è \texttt{POPULATION\_SIZE} $ = 100$ e \texttt{MUTATION\_RATE} $ = 0.05$. 
 
 Questa discrepanza può essere dovuta al fatto che all'aumentare della dimensione del grafo si ha un'esplosione combinatoria delle possibili soluzioni e quindi la dimensione della popolazione deve aumentare di conseguenza.
 
@@ -133,7 +133,7 @@ Per quanto riguarda il valore di \texttt{MUTATION\_RATE}, una possibile motivazi
 Questo perché, considerando una popolazione di 500 individui con probabilità di mutazione del $10\%$, in un'iterazione l'effetto dell'avanzamento produce una nuova generazione con un fitness leggermente migliore, mentre la mutazione di $50$ individui, essendo completamente casuale, può generare fin da subito un super-individuo con un elevato fitness.
 
 Un'ultima osservazione riguarda alcune esecuzioni dell'algoritmo con istanze di dimensione $N=150$, le quali hanno avuto un comportamento inatteso. 
-Ovvero, mentre la maggior parte delle esecuzioni riusciva a fare solamente un'iterazione a causa del time limit di un minuto, le ultime esecuzione hanno fatto in media 15 iterazioni. Tale anomalia può essere legata a come il sistema operativo ha assegnato la CPU al programma, anche se tutte le esecuzioni sono state effettuate sullo stesso computer e in condizioni simili. Per motivi di tempo non è stato poi possibile rieseguire l'algoritmo su tali istanze.
+Ovvero, mentre la maggior parte delle esecuzioni riusciva a fare solamente un'iterazione a causa del tempo limite di un minuto, le ultime esecuzione hanno fatto in media 15 iterazioni. Tale anomalia può essere legata a come il sistema operativo ha assegnato la CPU al programma, anche se tutte le esecuzioni sono state effettuate sullo stesso computer e in condizioni simili. Per motivi di tempo non è stato poi possibile rieseguire l'algoritmo su tali istanze.
 
 Infine, dato la dimensione consistente delle tabelle, queste non sono riportate nella relazione, ma sono contenute in un file Excel presente all'interno dell'archivio consegnato assieme alla relazione.
 
@@ -151,9 +151,95 @@ Come parametri dell'algoritmo sono stati utilizzati:
 
 \noindent Ovvero quelli che sono risultati migliori dal processo di ottimizzazione.
 
-L'algoritmo è stato eseguito quindi 3 volte per ogni istanza e poi è stata presa in considerazione la media dei risultati. 
-Inoltre, per ridurre il tempo necessario è stato assegnato come time limit per la durata dell'esecuzione dell'algoritmo genetico la stessa soglia temporale che ha utilizzato CPLEX.
-I vari time-limit per le istanze sono riportati in tabella ...\todo{Inserire tabella time-limit}
+L'algoritmo è stato eseguito 5 volte per ogni istanza e poi è stata presa in considerazione la media dei risultati. 
+Inoltre, per ridurre il tempo necessario è stato assegnato come limite temporale per la durata dell'esecuzione dell'algoritmo genetico la stessa soglia temporale che ha utilizzato CPLEX\footnote{Fatta eccezione per la soglia da 10 minuti, in quanto si è visto che già con 5 minuti l'algoritmo convergeva ad una soluzione.}.
+I vari limiti temporali per le istanze sono quindi simili a quelli riportati in tabella \ref{tab:cplex-recap}.
+
+I risultati ottenuti sono riportati in tabella \ref{tab:ga-recap}, mentre il grafico in figura \ref{fig:ga-gap} rappresenta il deterioramento dell'optimality gap al crescere della dimensione del problema.
+
+\begin{table}[htbp]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{c|c|c|c|c|c|c|}
+			\cline{2-7}
+			\multicolumn{1}{l|}{} & \multicolumn{3}{c|}{\textbf{Pseudo}} & \multicolumn{3}{c|}{\textbf{Random}} \\ \hline
+			\multicolumn{1}{|c|}{\textbf{Dimensione}} & \textbf{\begin{tabular}[c]{@{}c@{}}Tempo\\ Medio (s)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Valore\\ Medio\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Media\\ Gap ottimo (\%)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Tempo\\ Medio (s)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Valore\\ Medio\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Media\\ Gap ottimo (\%)\end{tabular}} \\ \hline
+			\multicolumn{1}{|c|}{5} & 0,99 & 13,55 & 0,00 & 0,97 & 17,27 & 0,00 \\ \hline
+			\multicolumn{1}{|c|}{10} & 1,00 & 35,59 & 5,88 & 1,00 & 53,04 & 11,16 \\ \hline
+			\multicolumn{1}{|c|}{15} & 1,00 & 48,23 & 11,50 & 1,00 & 73,63 & 17,59 \\ \hline
+			\multicolumn{1}{|c|}{20} & 1,00 & 77,97 & 27,56 & 1,00 & 119,13 & 24,07 \\ \hline
+			\multicolumn{1}{|c|}{25} & 10,00 & 121,55 & 31,57 & 10,00 & 170,29 & 30,38 \\ \hline
+			\multicolumn{1}{|c|}{30} & 10,00 & 100,59 & 40,66 & 10,00 & 202,44 & 34,97 \\ \hline
+			\multicolumn{1}{|c|}{35} & 10,00 & 125,34 & 41,44 & 10,00 & 274,39 & 31,11 \\ \hline
+			\multicolumn{1}{|c|}{40} & 59,97 & 217,40 & 33,24$^*$ & 60,00 & 263,47 & 36,49 \\ \hline
+			\multicolumn{1}{|c|}{45} & 60,00 & 182,59 & 29,96 & 60,00 & 347,77 & 41,80 \\ \hline
+			\multicolumn{1}{|c|}{50} & 60,00 & 295,67 & 36,56 & 59,99 & 508,70 & 35,76 \\ \hline
+			\multicolumn{1}{|c|}{55} & 60,00 & 469,33 & 44,11 & 59,99 & 509,22 & 44,20 \\ \hline
+			\multicolumn{1}{|c|}{60} & 60,00 & 384,25 & 45,73 & 59,99 & 574,03 & 38,59 \\ \hline
+			\multicolumn{1}{|c|}{65} & 60,00 & 433,19 & 44,12$^*$ & 59,99 & 766,07 & 37,90 \\ \hline
+			\multicolumn{1}{|c|}{70} & 300,00 & 504,16 & 55,30$^*$ & 299,94 & 821,45 & 43,62 \\ \hline
+			\multicolumn{1}{|c|}{75} & 300,00 & 470,13 & 55,53 & 299,99 & 1010,75 & 42,60 \\ \hline
+			\multicolumn{1}{|c|}{80} & 299,99 & 475,65 & 50,26$^*$ & 300,00 & 777,70 & 39,96 \\ \hline
+			\multicolumn{1}{|c|}{85} & 299,99 & 911,71 & 52,62$^*$ & 299,97 & 898,70 & 44,70 \\ \hline
+			\multicolumn{1}{|c|}{90} & 299,99 & 684,37 & 44,29$^*$ & 299,99 & 1211,12 & 45,72$^*$ \\ \hline
+			\multicolumn{1}{|c|}{95} & 299,99 & 1029,86 & 60,11$^*$ & 299,99 & 1032,96 & 50,15$^*$ \\ \hline
+			\multicolumn{1}{|c|}{100} & 299,99 & 834,27 & - & 299,99 & 1071,50 & - \\ \hline
+		\end{tabular}%
+	}
+	\caption{Risultati ottenuti dall'esecuzione dell'algoritmo genetico sulle istanze di benchmark. Per ogni dimensione sono state provate 5 istanze diverse e l'algoritmo è stato eseguito su ogni istanza 5 volte. Per $N=100$ non è presente l'optimality gap in quanto CPLEX non è riuscito a risolvere entro il tempo limite le istanze. Alcuni valori del gap dall'ottimo sono marcati con $^*$ perché per alcune delle istanze così marcate, CPLEX non è riuscito a completare l'esecuzione in tempo e quindi ha fornito una soluzione ammissibile ma che non è garantito essere ottima.}
+	\label{tab:ga-recap}
+\end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{immagini/ga-opt-gap.pdf}
+	\caption{Gap tra la soluzione ottima del problema e la migliore soluzione trovata dall'algoritmo genetico al crescere di $N$}\label{fig:ga-gap}
+\end{figure}
+
+Dai risultati riportati si può osservare che:
+
+\begin{itemize}
+	\item Le prestazioni dell'algoritmo genetico, in quanto ad optimality gap, sono simili sia che vengano risolte istanze generate casualmente, che istanze pseudo-casuali. \item Dalla figura \ref{fig:ga-gap} si può notare che al crescere di $N$, l'optimality gap risulta essere leggermente migliore per le istanze casuali, questo sembra confermare quando osservato con CPLEX, ovvero che le istanze generate casualmente siano più semplici da risolvere.
+	\item Le prestazioni dell'algoritmo sono comunque scadenti e questo può essere legato ad una convergenza troppo veloce della popolazione verso un'unica tipologia di soluzioni. Un'analisi più approfondita di ciò è presente nella seguente sezione.
+	\item Anche per istanze di piccole dimensioni vengono prodotte delle soluzioni particolarmente scadenti. Questo può essere dovuto al fatto che il tempo limite imposto sia troppo stretto e che non permetta all'algoritmo genetico di effettuare un numero sufficiente di iterazioni.
+\end{itemize}
+
+\subsubsection{Analisi della convergenza e delle prestazioni}
+
+Andando a monitorare l'esecuzione dell'algoritmo genetico, si è osservato che tipicamente la convergenza ad una determinata soluzione viene raggiunta con 1000 iterazioni, mentre con i parametri attuali e con un limite d'esecuzione di 5 minuti, l'algoritmo riesce a fare circa 3000 iterazioni\footnote{Per questo motivo il limite temporale è stato ridotto da 10 minuti a 5.}.
+
+Pertanto ci sono ampi margini di miglioramento per le prestazioni dell'algoritmo genetico, andando ad ottimizzare in modo migliore i parametri e a modificare alcune scelte progettuali.
+Questo risultato era aspettato in quanto le criticità degli algoritmi genetici sono le svariate scelte progettuali che si possono effettuare e l'elevato numero di parametri da ottimizzare.
+
+Per questo progetto le scelte progettuali sono state legate per lo più alla semplicità, in modo che fosse più semplice individuare e risolvere eventuali errori implementativi e, allo stesso tempo, l'ottimizzazione dei parametri è stata ridotta a causa dei vincoli temporali. 
+Quest'ultimo vincolo può aver influenzato l'ottimizzazione perché, con un limite di un minuto ad esecuzione, i valori per i parametri che rendono veloce l'esecuzione dell'algoritmo, e quindi permettono di fare più iterazioni nello stesso tempo, possono risultare migliori rispetto ad altri valori che ne rallentano l'esecuzione, diminuendo di conseguenza il numero di iterazioni, mentre con un tempo d'esecuzione maggiore, questi secondi valori potrebbero essere risultati migliori.
+
+Visti i risultati ottenuti, si possono individuare alcune modifiche dell'algoritmo che potrebbero portare a dei risultati migliori:
+
+\begin{itemize}
+	\item \textbf{Generazione e dimensione della popolazione}: anziché utilizzare una dimensione costante, la si può rendere proporzionale alla dimensione del problema. In questo modo si ha un pool di soluzioni iniziali che è sempre sufficientemente grande.
+	Sempre per diversificare ulteriormente la popolazione è possibile generare le soluzioni in modo casuale, anziché costruirle con un euristica pseudo-greedy.
+	\item \textbf{Operazione di crossover}: la combinazione di due soluzioni utilizza un'approccio greedy per completare la soluzione figlia, andando a forzare la struttura della nuova generazione. Un approccio alternativo che potrebbe diversificare maggiormente la nuova generazione è quello di andare ad aggiungere i nodi mancanti per completare il percorso in ordine casuale. Così facendo si ha comunque la certezza che la nuova soluzione sia ammissibile.
+	\item \textbf{Distanza di Hamming}: sia per valutare il fitness di una soluzione, che per sostituire la popolazione, può essere presa in considerazione la distanza di Hamming tra tutte le coppie di soluzioni presenti nella popolazione. Così facendo si può aumentare il fitness di una soluzione che è mediamente più diversa dalle altre e allo stesso tempo si può cercare di mantenere una certa diversificazione quando vengono scelte le soluzioni da mantenere nella popolazione.
+\end{itemize}
+
+Da notare che l'implementazione del primo e terzo punto vanno ad aumentare il carico computazionale dell'algoritmo e quindi il numero di iterazioni sarà quasi sicuramente inferiore a 3000.
+
+Per bilanciare questo aumento di carico computazionale si potrebbero andare a dividere l'esecuzione di alcune operazioni su più thread. 
+Infatti, CPLEX ha il vantaggio implementativo di sfruttare contemporaneamente più core della CPU, mentre l'algoritmo genetico implementato è sequenziale, quando in realtà la generazione delle soluzioni iniziali, così come l'evoluzione della popolazione e l'eventuale calcolo della distanza di Hamming tra le coppie di soluzioni, potrebbero essere distribuite su più thread.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

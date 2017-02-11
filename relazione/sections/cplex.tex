@@ -5,7 +5,7 @@
 
 \section{CPLEX} \label{sec:cplex}
 
-Il modello CPLEX è stato implementato come specificato nella consegna della prima esercitazione con dei particolari accorgimenti per rendere il codice più comprensibile e mantenibile:
+Il modello CPLEX è stato implementato come specificato nella consegna della prima esercitazione con dei particolari accorgimenti per rendere il codice più comprensibile e manutenibile:
 
 \begin{itemize}
 	\item Le informazioni relative al problema e ad una sua possibile soluzione sono state modellate con due classi \texttt{Problem} e \texttt{Solution}. Inoltre, tutta la logica di risoluzione è stata incapsulata nella classe \texttt{CPLEXSolver}.
@@ -15,9 +15,9 @@ Il modello CPLEX è stato implementato come specificato nella consegna della pri
 
 \subsection{Definizione delle variabili}
 
-Le variabili in CPLEX, una volta create, vengono memorizzate in sequenza all'interno di un array interno del risolutore e l'unico modo per riferirsi ad una variabile è mediante la sua posizione nell'array interno.
+Le variabili in CPLEX, una volta create, vengono memorizzate in sequenza all'interno di un array interno al risolutore e l'unico modo per riferirsi ad una variabile è mediante la sua posizione nell'array interno.
 
-Per riferirsi più facilmente alle variabili, viene quindi creata una matrice di dimensione $N\times N$ che associa il ``\textit{nome della variabile}'' alla sua posizione interna nel risolutore.
+Per riferirsi più facilmente alle variabili viene quindi creata una matrice di dimensione $N\times N$ che associa il ``\textit{nome della variabile}'' alla sua posizione interna nel risolutore.
 
 \begin{lstlisting}[language=C++, caption=Creazione delle variabili $x_{ij}$]
 // xMap[i][j] è una matrice N x N
@@ -37,16 +37,15 @@ for (int i = 0; i < N; ++i) {
 }
 \end{lstlisting}
 
-\noindent La mappatura del nome viene fatta nella riga 12 del frammento: \texttt{createdVars} è una variabile che tiene traccia del numero di variabili che sono state create nel risolutore e quindi la prossima variabile aggiunta avrà come indice interno il valore di \texttt{createdVars}. Il valore dell'indice viene quindi memorizzato nella mappa e poi incrementato, in modo che alla successiva iterazione dei ciclo, questo sia ancora corretto.
+\noindent La mappatura del nome viene fatta nella riga 12 del frammento di codice: \texttt{createdVars} è una variabile che tiene traccia del numero di variabili che sono state create nel risolutore e quindi la prossima variabile aggiunta avrà come indice interno il valore di \texttt{createdVars}. Il valore dell'indice viene quindi memorizzato nella mappa e poi incrementato, in modo che alla successiva iterazione dei ciclo questo sia ancora corretto.
 
 Nello stesso frammento di codice è possibile osservare come \textbf{non} vengano create le variabili $x_{ii}$, questo perché quando i due indici sono uguali, l'\texttt{if} in riga 4 blocca l'esecuzione del corpo. 
-Questa scelta è stata fatta perché tale variabile non è significativa per il problema, in quanto scegliere di spostare la trivella lungo l'arco $(i,i)$ equivale al lasciare ferma la trivella.
-
+Questa scelta è stata fatta perché tale variabile non è significativa per il problema, in quanto scegliere di spostare la trivella lungo l'arco $(i,i)$ equivale a lasciare ferma la trivella.
 Quanto riportato è stato effettuato anche per le variabili $y_{ij}$.
 
 \subsection{Definizione dei vincoli}
 
-CPLEX permette di definire più vincoli con una sola istruzione, tuttavia la notazione per sfruttare questa possibilità è poco pratica da usare, in quanto richiede che gli indici delle variabili e i corrispettivi coefficienti vengano passati come una matrice sparsa, linearizzata in un vettore.
+CPLEX permette di definire più vincoli con una sola istruzione, tuttavia la notazione per sfruttare questa possibilità è poco pratica da usare in quanto richiede che gli indici delle variabili e i corrispettivi coefficienti vengano passati come una matrice sparsa linearizzata in un vettore.
 Se invece viene creato un vincolo alla volta, non c'è la necessità di gestire la matrice sparsa, in quanto questa è composta da una sola riga e quindi può essere considerata come vettore. 
 Detto in altre parole, non è necessario utilizzare il vettore \texttt{rmatbeg} per tenere traccia dell'inizio delle varie righe, dato che essendoci un'unica riga, questa inizierà alla posizione 0 degli array utilizzati per definire il vincolo.
 
@@ -92,14 +91,14 @@ $$
 
 \noindent è necessario effettuare un iterazione esterna con il ciclo \texttt{for} di riga 2.
 
-Questo modo di definire i vincoli potrebbe essere leggermente meno efficiente, dato che effettua più chiamate ai metodi del risolutore, ma l'impatto sulle prestazioni rimane comunque basso, dato che i vincoli vengono creati solamente all'inizializzazione del modello e il tempo necessario è molto inferiore rispetto a quello necessario per l'ottimizzazione.
+Questo modo di definire i vincoli potrebbe essere leggermente meno efficiente, dato che effettua più chiamate ai metodi del risolutore, ma l'impatto sulle prestazioni rimane comunque basso in quanto i vincoli vengono creati solamente all'inizializzazione del modello e il tempo necessario all'inizializzazione è comunque molto inferiore rispetto a quello necessario per l'ottimizzazione.
 
 \subsection{Test del modello}
 
 \`E stato richiesto di osservare qual'è la dimensione massima di un problema che il modello CPLEX riesce a risolvere entro un certo periodo di tempo.
 
-Per fare ciò sono state prima generate 5 istanze casuali e 5 pseudo casuali per ogni dimensione $5$, $10$, $\ldots$, $100$ ed è stato eseguito CPLEX con un time limit di 10 minuti. Sono stati poi presi in considerazione 4 livelli di time limit: un secondo, dieci secondi, un minuto e dieci minuti ed è stato osservato qual'è la massima dimensione che può essere risolta entro tali intervalli.
-I risultati medi delle esecuzioni sulle istanze di varie dimensioni sono riportati nella tabella \ref{tab:cplex-avg} e riassunti nel grafico \ref{fig:cplex-time}, mentre la corrispondenza time limit/difficoltà massima è riassunta nella tabella \ref{tab:cplex-recap}.
+Per fare ciò sono state prima generate 5 istanze casuali e 5 pseudo casuali per ogni dimensione $5$, $10$, $\ldots$, $100$ ed è stato eseguito CPLEX con un tempo limite di 10 minuti. Sono stati poi presi in considerazione 4 livelli di tempo limite: un secondo, dieci secondi, un minuto e dieci minuti ed è stato osservato qual'è la massima dimensione che può essere risolta entro tali vincoli.
+I risultati medi delle esecuzioni sulle istanze di varie dimensioni sono riportati nella tabella \ref{tab:cplex-avg} e riassunti nel grafico \ref{fig:cplex-time}, mentre la corrispondenza tempo limite/difficoltà massima è riassunta nella tabella \ref{tab:cplex-recap}.
 
 \begin{table}[htbp]
 	\centering
@@ -115,7 +114,7 @@ I risultati medi delle esecuzioni sulle istanze di varie dimensioni sono riporta
 			\multicolumn{1}{|c|}{25} & 1,38 & 0,17 & 3,88 & 0 & 0,92 & 0,43 & 1,57 & 0 \\ \hline
 			\multicolumn{1}{|c|}{30} & 3,51 & 0,16 & 6,80 & 0 & 2,03 & 0,88 & 4,27 & 0 \\ \hline
 			\multicolumn{1}{|c|}{35} & 4,75 & 0,52 & 11,94 & 0 & 3,87 & 1,47 & 6,87 & 0 \\ \hline
-			\multicolumn{1}{|c|}{40} & 129,16 & 0,03 & 600,04 & 1 & 6,53 & 2,32 & 9,03 & 0 \\ \hline
+			\multicolumn{1}{|c|}{40} & 137,88 & 9,65 & 600,04 & 1 & 6,53 & 2,32 & 9,03 & 0 \\ \hline
 			\multicolumn{1}{|c|}{45} & 31,50 & 5,01 & 94,31 & 0 & 10,22 & 9,11 & 12,89 & 0 \\ \hline
 			\multicolumn{1}{|c|}{50} & 114,99 & 18,88 & 350,22 & 0 & 18,16 & 13,72 & 24,37 & 0 \\ \hline
 			\multicolumn{1}{|c|}{55} & 36,53 & 26,39 & 47,00 & 0 & 24,98 & 15,83 & 53,49 & 0 \\ \hline
@@ -135,7 +134,7 @@ I risultati medi delle esecuzioni sulle istanze di varie dimensioni sono riporta
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=.9\textwidth]{immagini/cplex-time.png}
+	\includegraphics[width=\textwidth]{immagini/cplex-time.pdf}
 	\caption{Tempo medio impiegato da CPLEX per risolvere le varie istanze}\label{fig:cplex-time}
 \end{figure}
 
@@ -150,7 +149,7 @@ I risultati medi delle esecuzioni sulle istanze di varie dimensioni sono riporta
 		\multicolumn{1}{|c|}{60}                  & 60                   & 60                \\ \hline
 		\multicolumn{1}{|c|}{600}                 & 85                   & 95               \\ \hline
 	\end{tabular}
-	\caption{Massima difficoltà mediamente risolvibile entro i rispettivi time limit. Per determinare la difficoltà è stata usata la media, senza prendere in considerazione i casi limite in cui già per $N$ bassi non viene trovata una soluzione.}
+	\caption{Massima difficoltà mediamente risolvibile entro i rispettivi limiti temporali. Per determinare la difficoltà è stata usata la media, senza prendere in considerazione i casi limite in cui già per $N$ bassi non viene trovata una soluzione.}
 	\label{tab:cplex-recap}
 \end{table}
 
@@ -159,5 +158,6 @@ Dai risultati ottenuti si può osservare che:
 \begin{itemize}
 	\item Le istanze generate casualmente sembrano essere mediamente più facili da risolvere rispetto a quelle generate in modo pseudo casuale.
 	\item Per quanto riguarda le istanze pseudo casuali, già con $N=40$ è stata trovata un'istanza che CPLEX non riesce a risolvere entro 10 minuti d'esecuzione.
-	\item Con $N = 100$ solo due istanze di quelle generate casualmente è sono state risolte, mentre di quelle pseudo casuali non ne è stata risolta nessuna. Pertanto sembra che la distribuzione dei punti sia notevolmente influente sulle prestazioni dell'algoritmo.
+	\item Con $N = 100$ solo due istanze di quelle generate casualmente sono state risolte, mentre di quelle pseudo casuali non ne è stata risolta nessuna. 
+	Pertanto sembra che la distribuzione dei punti sia piuttosto influente sulle prestazioni dell'algoritmo.
 \end{itemize}

@@ -23,9 +23,13 @@ Solution *GASolver::solve() {
     Population* population = new Population(this->populationSize,this->mutationProbability, this->newGenerationRatio, problem);
 
     cout << "Popolazione iniziale:" <<endl;
-    cout << "Worst: " <<population->getWorstSolution()->getFitness();
+    Solution* worstSol = population->getWorstSolution();
+    cout << "Worst: " <<worstSol->getFitness();
+    delete worstSol;
     cout << "\t Avg: " <<population->getAverageFitness();
-    cout << "\t Best: " <<population->getBestSolution()->getFitness() << endl;
+    Solution* bestSol = population->getBestSolution();
+    cout << "\t Best: " <<bestSol->getFitness() << endl;
+    delete bestSol;
 
     cout << "Evoluzione in corso..." <<endl;
     unsigned int i = 0;
@@ -40,9 +44,13 @@ Solution *GASolver::solve() {
         population->evolvePopulation();
         if (i % 1000 == 0) {
             cout << "Iterazione "  <<i <<endl;
-            cout << "Worst: " <<population->getWorstSolution()->getFitness();
+            worstSol = population->getWorstSolution();
+            cout << "Worst: " <<worstSol->getFitness();
+            delete worstSol;
             cout << "\t Avg: " <<population->getAverageFitness();
-            cout << "\t Best: " <<population->getBestSolution()->getFitness() << endl;
+            bestSol = population->getBestSolution();
+            cout << "\t Best: " <<bestSol->getFitness() << endl;
+            delete bestSol;
         }
     }
 
@@ -71,9 +79,14 @@ Solution *GASolver::solve() {
     //}
 
     cout << "Popolazione finale" <<endl;
-    cout << "Worst: " <<population->getWorstSolution()->getFitness();
+    worstSol = population->getWorstSolution();
+    cout << "Worst: " <<worstSol->getFitness();
+    delete worstSol;
     cout << "\t Avg: " <<population->getAverageFitness();
-    cout << "\t Best: " <<population->getBestSolution()->getFitness() << endl;
+    bestSol = population->getBestSolution();
+    cout << "\t Best: " <<bestSol->getFitness() << endl;
+    delete bestSol;
+
     Solution* sol = population->getBestSolution();
     this->population = population;
     this->lastIterationsCount = i;

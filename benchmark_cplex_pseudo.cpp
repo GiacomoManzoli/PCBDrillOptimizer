@@ -17,7 +17,7 @@ string getIstanceName(string baseName, int n, int v) {
 
 int main() {
     srand(time(NULL));
-    std::cout << "Hello, World! from main.cpp" << std::endl;
+    std::cout << "Hello, World! from benchmark_cplex_pseudo.cpp" << std::endl;
 
 
 
@@ -32,7 +32,7 @@ int main() {
     unsigned int currentSize;
     cout << "Inizio batteria di risoluzioni "<<endl;
 
-    for (unsigned int i = 18; i < 19; i++){
+    for (unsigned int i = 0; i < 19; i++){
         cout << "---------"<<endl;
         cout << "Dimensione: " << START_SIZE + START_SIZE*i << endl;
         currentSize = START_SIZE + START_SIZE*i;

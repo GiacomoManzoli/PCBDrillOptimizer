@@ -76,10 +76,16 @@ void Population::evolvePopulation(){
         }
         this->averageFitness += solFitness;
     }
+    // Rimuovo gli oggetti extra
+    for (unsigned int i = 0; i < solutions.size(); i++){
+        delete solutions.at(i);
+    }
     solutions = newPopulation;
     this->averageFitness/= size;
     //this->best = solutions.at(bi);
     //this->worst = solutions.at(wi);
+    if (this->best != nullptr) { delete this->best; }
+    if (this->worst != nullptr) { delete this->worst; }
     this->best = new Solution(problem, solutions.at(bi)->getPath());
     this->worst = new Solution(problem, solutions.at(wi)->getPath());
 }

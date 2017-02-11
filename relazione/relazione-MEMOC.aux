@@ -39,8 +39,8 @@
 \newlabel{tab:cplex-avg}{{1}{5}{Risultatati medi dell'esecuzione del risolutore CPLEX su 5 istanze diverse per ogni dimensione. Tutti i tempi riportati nella tabella sono espressi in secondi.\relax }{table.caption.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Tempo medio impiegato da CPLEX per risolvere le varie istanze\relax }}{5}{figure.caption.5}}
 \newlabel{fig:cplex-time}{{2}{5}{Tempo medio impiegato da CPLEX per risolvere le varie istanze\relax }{figure.caption.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Massima difficolt\IeC {\`a} mediamente risolvibile entro i rispettivi time limit. Per determinare la difficolt\IeC {\`a} \IeC {\`e} stata usata la media, senza prendere in considerazione i casi limite in cui gi\IeC {\`a} per $N$ bassi non viene trovata una soluzione.\relax }}{6}{table.caption.6}}
-\newlabel{tab:cplex-recap}{{2}{6}{Massima difficoltà mediamente risolvibile entro i rispettivi time limit. Per determinare la difficoltà è stata usata la media, senza prendere in considerazione i casi limite in cui già per $N$ bassi non viene trovata una soluzione.\relax }{table.caption.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Massima difficolt\IeC {\`a} mediamente risolvibile entro i rispettivi limiti temporali. Per determinare la difficolt\IeC {\`a} \IeC {\`e} stata usata la media, senza prendere in considerazione i casi limite in cui gi\IeC {\`a} per $N$ bassi non viene trovata una soluzione.\relax }}{6}{table.caption.6}}
+\newlabel{tab:cplex-recap}{{2}{6}{Massima difficoltà mediamente risolvibile entro i rispettivi limiti temporali. Per determinare la difficoltà è stata usata la media, senza prendere in considerazione i casi limite in cui già per $N$ bassi non viene trovata una soluzione.\relax }{table.caption.6}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Algoritmo Genetico}{6}{section.3}}
 \newlabel{sec:genetico}{{3}{6}{Algoritmo Genetico}{section.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Scelte progettuali}{6}{subsection.3.1}}
@@ -53,16 +53,16 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.5}Crossover}{7}{subsubsection.3.1.5}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.6}Mutazione}{7}{subsubsection.3.1.6}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.7}Sostituzione della popolazione}{7}{subsubsection.3.1.7}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.8}Criterio di stop}{8}{subsubsection.3.1.8}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.8}Criterio di arresto}{8}{subsubsection.3.1.8}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Parametri dell'algoritmo e processo di ottimizzazione}{8}{subsection.3.2}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Esperimenti per l'ottimizzazione dei parametri}{8}{subsubsection.3.2.1}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Risultati}{9}{subsubsection.3.2.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Test dell'algoritmo}{9}{subsection.3.3}}
-\@writefile{tdo}{\contentsline {todo}{\color@fb@x {}{black}{}{orange}{\leavevmode {\color  {orange}o}}\ Inserire tabella time-limit}{9}{section*.8}}
-\pgfsyspdfmark {pgfid1}{25199106}{12640208}
-\pgfsyspdfmark {pgfid4}{37173022}{12655655}
-\pgfsyspdfmark {pgfid5}{38795037}{12408481}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Confronto}{9}{section.4}}
-\newlabel{sec:confronto}{{4}{9}{Confronto}{section.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Informazioni sul codice e sulla consegna}{9}{appendix.Alph1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Possibili problemi di compilazione}{10}{subsection.Alph1.1}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Risultati ottenuti dall'esecuzione dell'algoritmo genetico sulle istanze di benchmark. Per ogni dimensione sono state provate 5 istanze diverse e l'algoritmo \IeC {\`e} stato eseguito su ogni istanza 5 volte. Per $N=100$ non \IeC {\`e} presente l'optimality gap in quanto CPLEX non \IeC {\`e} riuscito a risolvere entro il tempo limite le istanze. Alcuni valori del gap dall'ottimo sono marcati con $^*$ perch\IeC {\'e} per alcune delle istanze cos\IeC {\`\i } marcate, CPLEX non \IeC {\`e} riuscito a completare l'esecuzione in tempo e quindi ha fornito una soluzione ammissibile ma che non \IeC {\`e} garantito essere ottima.\relax }}{10}{table.caption.8}}
+\newlabel{tab:ga-recap}{{3}{10}{Risultati ottenuti dall'esecuzione dell'algoritmo genetico sulle istanze di benchmark. Per ogni dimensione sono state provate 5 istanze diverse e l'algoritmo è stato eseguito su ogni istanza 5 volte. Per $N=100$ non è presente l'optimality gap in quanto CPLEX non è riuscito a risolvere entro il tempo limite le istanze. Alcuni valori del gap dall'ottimo sono marcati con $^*$ perché per alcune delle istanze così marcate, CPLEX non è riuscito a completare l'esecuzione in tempo e quindi ha fornito una soluzione ammissibile ma che non è garantito essere ottima.\relax }{table.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Gap tra la soluzione ottima del problema e la migliore soluzione trovata dall'algoritmo genetico al crescere di $N$\relax }}{11}{figure.caption.9}}
+\newlabel{fig:ga-gap}{{4}{11}{Gap tra la soluzione ottima del problema e la migliore soluzione trovata dall'algoritmo genetico al crescere di $N$\relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Analisi della convergenza e delle prestazioni}{11}{subsubsection.3.3.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Conclusioni}{12}{section.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Informazioni sul codice e sulla consegna}{13}{appendix.Alph1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Possibili problemi di compilazione}{13}{subsection.Alph1.1}}

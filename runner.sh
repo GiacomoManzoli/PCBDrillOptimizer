@@ -1,3 +1,3 @@
 #!/bin/bash
-./cplex_pseudo.out
-./cplex_rand.out
+./ga_rand.out
+./ga_pseudo.out

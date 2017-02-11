@@ -22,9 +22,9 @@ unsigned int getMaxTime(unsigned int currentSize) {
     if (currentSize <= 20) { return 1; }
     if (currentSize <= 35) { return 10; }
     if (currentSize <= 65) { return 60; }
-    if (currentSize <= 85) { return 600; }
+    if (currentSize <= 85) { return 300; }
 
-    return 600;
+    return 300;
 }
 
 int main() {
@@ -34,19 +34,22 @@ int main() {
     const unsigned int START_SIZE = 5;
 
     // Prepero il file
-    string oFileName = "outputs/benchmark/ga_rand.csv";
+    string oFileName = "outputs/benchmark/ga_rand_cont_2.csv";
     ofstream myfile;
     myfile.open(oFileName);
     myfile << "size;requested_time;istanceName;val"<<endl;
     myfile.close();
 
+
+
     unsigned int currentSize;
     cout << "Inizio batteria di risoluzioni "<<endl;
-    for (unsigned int i = 0; i < 19; i++){
+    for (unsigned int i = 0; i < 20; i++){
         cout << "---------"<<endl;
         cout << "Dimensione: " << START_SIZE + START_SIZE*i << endl;
         currentSize = START_SIZE + START_SIZE*i;
         for (unsigned int j = 1; j <= 5; j++){
+
             string currentIstance = getIstanceName("istances/benchmark/rand/rand_n",currentSize, j);
             cout << "Istanza N: "<<j <<" Filepath: "<< currentIstance <<endl;
             for (unsigned int k = 0; k < 5; k++){

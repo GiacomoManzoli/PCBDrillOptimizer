@@ -3,3 +3,21 @@
 % !TEX root = relazione-MEMOC.tex
 % !TeX spellcheck = it_IT
 
+\section{Conclusioni}
+
+Il modello CPLEX è risultato nettamente superiore all'algoritmo genetico, principalmente perché le istanze sulle quali è stato eseguito erano di dimensione ridotte. 
+Nel caso pratico ci sono schede con molti più fori e quindi trovare una soluzione ottima potrebbe richiedere molto più di 10 minuti.
+
+D'altro canto l'algoritmo genetico ora come ora, non è una grande alternativa in quanto il gap dalla soluzione ottima è considerevole. 
+In ogni caso, la certezza dell'ottimalità con l'algoritmo genetico non si può avere, ma le modifiche suggerite potrebbero fornire soluzioni migliori rispetto a quelle attuali.
+
+C'è poi un'altra considerazione da fare riguardo la distribuzione dei fori nella scheda, che nel caso pratico sono tra loro raggruppati in insiemi di fori vicini.
+Si è cercato di imitare ciò con le istanze pseudo-casuali e si è osservato che al crescere del numero dei fori, sia il modello CPLEX che l'algoritmo genetico, fanno più fatica a risolvere tali istanze.
+Questo può essere dovuto al fatto che il modello CPLEX ``\textit{perda tempo}'' ad ottimizzare lo spostamento all'interno dei vari gruppi, mentre per l'algoritmo genetico vengono creati più minimi locali ai quali converge la popolazione.
+Pertanto un algoritmo euristico alternativo potrebbe prima risolvere il problema principale, ovvero trovare il ciclo ottimo che permette di visitare tutti i vari gruppi di fori da effettuare e poi ottimizzare il percorso interno di ciascuno gruppo.
+Così facendo si scompone il problema in più sotto-problemi con meno variabili e quindi più veloci da risolvere. 
+Inoltre, è ragionevole pensare che la parte più critica sia l'ordine in cui vengono visitati i vari gruppi di fori, perché questi possono essere più sparsi, mentre l'ordine in cui vengono effettuati i fori che appartengono ad uno stesso insieme risulta meno importante perché sono tra loro vicini.
+Si può quindi progettare un approccio ibrido, che usa un modello esatto per calcolare il ciclo ottimo di visita dei vari gruppi e un'euristica per determinare il percorso di foratura interno ai vari insiemi. 
+
+
+

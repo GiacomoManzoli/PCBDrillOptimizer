@@ -20,19 +20,19 @@ LINKOPTS = -o
 
 
 ## OSX FLAG
-CPX_INCDIR  = /opt/CPLEX_Studio1263/cplex/include
-CPX_LIBDIR  = /opt/CPLEX_Studio1263/cplex/lib/x86-64_osx/static_pic
-CPX_LDFLAGS = -lcplex -lm -pthread
-## Linux/LAB flag
-#CPX_INCDIR  = /opt/CPLEX_Studio/cplex/include
-#CPX_LIBDIR  = /opt/CPLEX_Studio/cplex/lib/x86-64_linux/static_pic
+#CPX_INCDIR  = /opt/CPLEX_Studio1263/cplex/include
+#CPX_LIBDIR  = /opt/CPLEX_Studio1263/cplex/lib/x86-64_osx/static_pic
 #CPX_LDFLAGS = -lcplex -lm -pthread
+## Linux/LAB flag
+CPX_INCDIR  = /opt/CPLEX_Studio/cplex/include
+CPX_LIBDIR  = /opt/CPLEX_Studio/cplex/lib/x86-64_linux/static_pic
+CPX_LDFLAGS = -lcplex -lm -pthread
 
 #g++ -std=c++11 tostring.cpp
 
 #### MAKE
 
-all : $(EXENAME) cplex_pseudo cplex_rand ga_rand ga_test
+all : $(EXENAME) cplex_pseudo cplex_rand ga_rand ga_pseudo ga_test
 
 cplex_pseudo : $(OBJS_CPLEX_PSEUDO)
 	$(CC) $(LINKOPTS) cplex_pseudo.out  $(OBJS_CPLEX_PSEUDO) -L$(CPX_LIBDIR) $(CPX_LDFLAGS)
